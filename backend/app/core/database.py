@@ -1,0 +1,46 @@
+from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, AsyncSession
+from sqlalchemy.orm import declarative_base
+from app.core.config import settings
+
+engine_kwargs = {
+    "echo": False,
+    "future": True,
+}
+
+if not settings.SQLALCHEMY_DATABASE_URI.startswith("sqlite"):
+    engine_kwargs.update({
+        "pool_size": settings.DB_POOL_SIZE,
+        "max_overflow": settings.DB_MAX_OVERFLOW,
+        "pool_pre_ping": True,
+        "pool_recycle": 3600,
+    })
+
+# Create the async engine
+engine = create_async_engine(
+    settings.SQLALCHEMY_DATABASE_URI,
+    **engine_kwargs
+)
+
+# Create a session factory
+AsyncSessionLocal = async_sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
+    autocommit=False,
+    autoflush=False
+)
+
+# Base class for declarative models
+Base = declarative_base()
+
+async def get_db():
+    """
+    Dependency function that yields a database session.
+    Used in FastAPI routes for native DI if needed, but since we are using Repositories
+    we might inject this differently.
+    """
+    async with AsyncSessionLocal() as session:
+        try:
+            yield session
+        finally:
+            await session.close()

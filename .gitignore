@@ -1,0 +1,98 @@
+# ===================================
+# AEGON Enterprise Platform - .gitignore
+# ===================================
+
+# ----- Dependencies -----
+node_modules/
+frontend/node_modules/
+
+# ----- Build Outputs -----
+dist/
+dist-ssr/
+build/
+.output/
+.vinxi/
+.nitro/
+.wrangler/
+.tanstack/
+
+# ----- Frontend Caches -----
+.vite/
+.cache/
+.turbo/
+*.local
+.dev.vars
+frontend/.tanstack/
+
+# ----- Backend / Python -----
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+*.egg
+.eggs/
+*.pyo
+venv/
+.venv/
+env/
+.env
+backend/.env
+backend/venv/
+backend/.venv/
+backend/__pycache__/
+backend/app/__pycache__/
+
+# ----- Database -----
+*.db
+*.sqlite3
+
+# ----- Testing -----
+.pytest_cache/
+.coverage
+htmlcov/
+coverage/
+*.cover
+.mypy_cache/
+.ruff_cache/
+
+# ----- Celery -----
+celerybeat-schedule*
+celerybeat.pid
+
+# ----- Logs -----
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# ----- OS -----
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*.sw?
+
+# ----- IDE / Editor -----
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+
+# ----- Secrets & Config -----
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# ----- Temporary / Debug -----
+*.bak
+*.tmp
+scratch/

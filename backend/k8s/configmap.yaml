@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: aegon-config
+data:
+  PROJECT_NAME: "AEGON Enterprise Platform"
+  API_V1_STR: "/api/v1"
+  POSTGRES_SERVER: "aegon-postgres"
+  POSTGRES_USER: "postgres"
+  POSTGRES_DB: "aegon_db"
+  POSTGRES_PORT: "5432"
+  REDIS_HOST: "aegon-redis"
+  REDIS_PORT: "6379"
+  REDIS_DB: "0"
+  RABBITMQ_HOST: "aegon-rabbitmq"
+  RABBITMQ_PORT: "5672"
+  RABBITMQ_USER: "guest"

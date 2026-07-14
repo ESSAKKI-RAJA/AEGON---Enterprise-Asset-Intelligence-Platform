@@ -1,0 +1,68 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: aegon-backend
+  labels:
+    app: aegon
+    component: backend
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: aegon
+      component: backend
+  template:
+    metadata:
+      labels:
+        app: aegon
+        component: backend
+    spec:
+      containers:
+        - name: backend
+          image: aegon/backend:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: aegon-config
+            - secretRef:
+                name: aegon-secrets
+          resources:
+            requests:
+              cpu: "500m"
+              memory: "512Mi"
+            limits:
+              cpu: "2"
+              memory: "2Gi"
+          livenessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /api/v1/health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 5
+---
+apiVersion: autoscaling/v2
+kind: HorizontalPodAutoscaler
+metadata:
+  name: aegon-backend-hpa
+spec:
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: Deployment
+    name: aegon-backend
+  minReplicas: 3
+  maxReplicas: 10
+  metrics:
+    - type: Resource
+      resource:
+        name: cpu
+        target:
+          type: Utilization
+          averageUtilization: 70
