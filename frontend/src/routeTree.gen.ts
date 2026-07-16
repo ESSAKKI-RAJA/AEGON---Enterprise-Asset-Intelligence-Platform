@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AppVisionIntelligenceRouteImport } from './routes/_app.vision-intelligence'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppSecurityRouteImport } from './routes/_app.security'
 import { Route as AppProcurementRouteImport } from './routes/_app.procurement'
@@ -32,6 +33,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AppVisionIntelligenceRoute = AppVisionIntelligenceRouteImport.update({
+  id: '/vision-intelligence',
+  path: '/vision-intelligence',
+  getParentRoute: () => AppRoute,
 } as any)
 const AppSettingsRoute = AppSettingsRouteImport.update({
   id: '/settings',
@@ -107,6 +113,7 @@ export interface FileRoutesByFullPath {
   '/procurement': typeof AppProcurementRoute
   '/security': typeof AppSecurityRoute
   '/settings': typeof AppSettingsRoute
+  '/vision-intelligence': typeof AppVisionIntelligenceRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
 }
 export interface FileRoutesByTo {
@@ -122,6 +129,7 @@ export interface FileRoutesByTo {
   '/procurement': typeof AppProcurementRoute
   '/security': typeof AppSecurityRoute
   '/settings': typeof AppSettingsRoute
+  '/vision-intelligence': typeof AppVisionIntelligenceRoute
   '/assets/$assetId': typeof AppAssetsAssetIdRoute
 }
 export interface FileRoutesById {
@@ -139,6 +147,7 @@ export interface FileRoutesById {
   '/_app/procurement': typeof AppProcurementRoute
   '/_app/security': typeof AppSecurityRoute
   '/_app/settings': typeof AppSettingsRoute
+  '/_app/vision-intelligence': typeof AppVisionIntelligenceRoute
   '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
 }
 export interface FileRouteTypes {
@@ -156,6 +165,7 @@ export interface FileRouteTypes {
     | '/procurement'
     | '/security'
     | '/settings'
+    | '/vision-intelligence'
     | '/assets/$assetId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -171,6 +181,7 @@ export interface FileRouteTypes {
     | '/procurement'
     | '/security'
     | '/settings'
+    | '/vision-intelligence'
     | '/assets/$assetId'
   id:
     | '__root__'
@@ -187,6 +198,7 @@ export interface FileRouteTypes {
     | '/_app/procurement'
     | '/_app/security'
     | '/_app/settings'
+    | '/_app/vision-intelligence'
     | '/_app/assets/$assetId'
   fileRoutesById: FileRoutesById
 }
@@ -210,6 +222,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_app/vision-intelligence': {
+      id: '/_app/vision-intelligence'
+      path: '/vision-intelligence'
+      fullPath: '/vision-intelligence'
+      preLoaderRoute: typeof AppVisionIntelligenceRouteImport
+      parentRoute: typeof AppRoute
     }
     '/_app/settings': {
       id: '/_app/settings'
@@ -322,6 +341,7 @@ interface AppRouteChildren {
   AppProcurementRoute: typeof AppProcurementRoute
   AppSecurityRoute: typeof AppSecurityRoute
   AppSettingsRoute: typeof AppSettingsRoute
+  AppVisionIntelligenceRoute: typeof AppVisionIntelligenceRoute
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -336,6 +356,7 @@ const AppRouteChildren: AppRouteChildren = {
   AppProcurementRoute: AppProcurementRoute,
   AppSecurityRoute: AppSecurityRoute,
   AppSettingsRoute: AppSettingsRoute,
+  AppVisionIntelligenceRoute: AppVisionIntelligenceRoute,
 }
 
 const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)

@@ -6,7 +6,7 @@ from app.core.logging import setup_logging
 from app.core.middleware import setup_middlewares
 from app.core.container import Container
 from app.api.v1 import (
-    auth, assets, maintenance, inventory, finance, procurement, analytics, ai, realtime, settings as settings_api, search
+    auth, assets, maintenance, inventory, finance, procurement, analytics, ai, realtime, settings as settings_api, search, vision
 )
 from app.core.exceptions import AegonException, aegon_exception_handler, global_exception_handler
 
@@ -49,6 +49,7 @@ app.include_router(ai.router, prefix=f"{settings.API_V1_STR}/ai", tags=["ai"])
 app.include_router(realtime.router, prefix=f"{settings.API_V1_STR}/realtime", tags=["realtime"])
 app.include_router(settings_api.router, prefix=f"{settings.API_V1_STR}/settings", tags=["settings"])
 app.include_router(search.router, prefix=f"{settings.API_V1_STR}/search", tags=["search"])
+app.include_router(vision.router, prefix=f"{settings.API_V1_STR}/vision", tags=["vision-intelligence"])
 
 from app.core.database import AsyncSessionLocal
 from app.core.cache import get_cache

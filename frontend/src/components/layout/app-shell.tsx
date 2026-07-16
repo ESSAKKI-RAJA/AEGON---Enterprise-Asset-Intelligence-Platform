@@ -18,6 +18,7 @@ import {
   BrainCircuit,
   Shield,
   Activity,
+  ScanEye,
 } from "lucide-react";
 import { useEffect, useState, type ReactNode, memo } from "react";
 import { cn } from "@/lib/utils";
@@ -36,6 +37,7 @@ const NAV = [
   { to: "/finance", label: "Finance", icon: DollarSign },
   { to: "/analytics", label: "Analytics", icon: BarChart3 },
   { to: "/ai-intelligence", label: "AI Intelligence", icon: BrainCircuit },
+  { to: "/vision-intelligence", label: "Vision Intelligence", icon: ScanEye },
   { to: "/security", label: "Security", icon: Shield },
   { to: "/settings", label: "Settings", icon: SettingsIcon },
 ] as const;
@@ -50,6 +52,7 @@ const TITLE_MAP: Record<string, string> = {
   "/finance": "Finance Intelligence",
   "/analytics": "Analytics",
   "/ai-intelligence": "AI Intelligence",
+  "/vision-intelligence": "Vision Intelligence",
   "/security": "Security Center",
   "/settings": "Settings",
 };
