@@ -78,6 +78,10 @@ class DefectFinding(BaseModel):
     recommended_action: str
     bounding_box: Optional[BoundingBoxMock] = None
     area_affected_pct: float = Field(default=0.0, ge=0.0, le=100.0)
+    heatmap_data: Optional[str] = None  # Base64 simulated heat map or token
+    mask_points: list[list[float]] = Field(default_factory=list)  # Polygon for segmentation
+    estimated_repair_cost: float = 0.0
+    estimated_repair_time_mins: int = 0
 
 
 # ---------------------------------------------------------------------------
@@ -98,6 +102,13 @@ class ViewInspectionResult(BaseModel):
     critical_count: int = 0
     processing_time_ms: float = 0.0
     inference_engine: str = "MockInferenceEngine"
+    
+    # Model Metadata
+    model_version: str = "v6.5-enterprise"
+    gpu_status: str = "A100 - Active"
+    cpu_usage_pct: float = 0.0
+    memory_usage_mb: float = 0.0
+    queue_position: int = 0
 
     # Metadata
     inspected_at: Optional[datetime] = None
@@ -148,9 +159,13 @@ class DigitalTwinState(BaseModel):
     health_score: float = Field(ge=0.0, le=100.0, default=100.0)
     risk_score: float = Field(ge=0.0, le=100.0, default=0.0)
     temperature_celsius: float = 25.0
+    pressure_psi: float = 14.7
+    rotation_rpm: float = 0.0
     maintenance_status: str = "Up to Date"
     inspection_progress_pct: float = Field(ge=0.0, le=100.0, default=0.0)
     views_completed: list[VisionViewType] = Field(default_factory=list)
+    historical_health_trend: list[float] = Field(default_factory=list)
+    historical_risk_trend: list[float] = Field(default_factory=list)
     last_updated: datetime = Field(default_factory=datetime.utcnow)
 
 
@@ -200,3 +215,14 @@ class VisionStatistics(BaseModel):
     most_common_defect: str
     critical_defect_rate_pct: float
     avg_inspection_time_seconds: float
+    avg_queue_time_ms: float = 0.0
+    active_gpu_utilization_pct: float = 0.0
+
+class CreateMaintenanceTicketRequest(BaseModel):
+    session_id: str
+    asset_id: Optional[str] = None
+    finding_id: str
+    defect_type: str
+    priority: MaintenancePriority
+    estimated_cost: float
+

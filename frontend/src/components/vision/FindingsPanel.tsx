@@ -10,6 +10,8 @@ import type { DefectFinding, DefectSeverity } from "@/types/vision";
 interface FindingsPanelProps {
   findings: DefectFinding[];
   viewLabel?: string;
+  onCreateTicket?: (finding: DefectFinding) => void;
+  isCreatingTicket?: boolean;
 }
 
 const SEVERITY_CONFIG: Record<
@@ -71,7 +73,17 @@ function ConfidenceBar({ value, barClass }: { value: number; barClass: string })
   );
 }
 
-function FindingCard({ finding, index }: { finding: DefectFinding; index: number }) {
+function FindingCard({
+  finding,
+  index,
+  onCreateTicket,
+  isCreatingTicket,
+}: {
+  finding: DefectFinding;
+  index: number;
+  onCreateTicket?: (finding: DefectFinding) => void;
+  isCreatingTicket?: boolean;
+}) {
   const [expanded, setExpanded] = useState(false);
   const cfg = SEVERITY_CONFIG[finding.severity];
   const Icon = cfg.icon;
@@ -159,6 +171,29 @@ function FindingCard({ finding, index }: { finding: DefectFinding; index: number
                   Area affected: {finding.area_affected_pct.toFixed(1)}%
                 </p>
               )}
+              {/* Cost and Time estimates */}
+              {(finding.estimated_repair_cost > 0 || finding.estimated_repair_time_mins > 0) && (
+                <div className="flex items-center gap-4 mt-2 pt-2 border-t border-slate-800/50">
+                  {finding.estimated_repair_cost > 0 && (
+                    <span className="text-[9px] font-mono text-amber-500/80">Est. Cost: ${finding.estimated_repair_cost.toFixed(2)}</span>
+                  )}
+                  {finding.estimated_repair_time_mins > 0 && (
+                    <span className="text-[9px] font-mono text-blue-400/80">Est. Time: {finding.estimated_repair_time_mins} mins</span>
+                  )}
+                </div>
+              )}
+              {/* Action buttons */}
+              {(finding.severity === "critical" || finding.severity === "high") && onCreateTicket && (
+                <div className="mt-3">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); onCreateTicket(finding); }}
+                    disabled={isCreatingTicket}
+                    className="w-full py-1.5 px-3 rounded bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-indigo-400 text-[10px] font-mono font-bold transition-colors disabled:opacity-50"
+                  >
+                    CREATE MAINTENANCE TICKET
+                  </button>
+                </div>
+              )}
             </div>
           </motion.div>
         )}
@@ -167,7 +202,7 @@ function FindingCard({ finding, index }: { finding: DefectFinding; index: number
   );
 }
 
-export function FindingsPanel({ findings, viewLabel }: FindingsPanelProps) {
+export function FindingsPanel({ findings, viewLabel, onCreateTicket, isCreatingTicket }: FindingsPanelProps) {
   const [filter, setFilter] = useState<DefectSeverity | "all">("all");
 
   const severityOrder: DefectSeverity[] = ["critical", "high", "medium", "low", "none"];
@@ -235,7 +270,13 @@ export function FindingsPanel({ findings, viewLabel }: FindingsPanelProps) {
       <div className="space-y-2">
         <AnimatePresence>
           {filtered.map((finding, i) => (
-            <FindingCard key={finding.finding_id} finding={finding} index={i} />
+            <FindingCard
+              key={finding.finding_id}
+              finding={finding}
+              index={i}
+              onCreateTicket={onCreateTicket}
+              isCreatingTicket={isCreatingTicket}
+            />
           ))}
         </AnimatePresence>
       </div>

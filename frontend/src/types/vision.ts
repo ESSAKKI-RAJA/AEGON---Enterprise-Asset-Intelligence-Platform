@@ -47,6 +47,10 @@ export interface DefectFinding {
   recommended_action: string;
   bounding_box?: BoundingBoxMock;
   area_affected_pct: number;
+  heatmap_data?: string;
+  mask_points: number[][];
+  estimated_repair_cost: number;
+  estimated_repair_time_mins: number;
 }
 
 export interface ViewInspectionResult {
@@ -59,6 +63,11 @@ export interface ViewInspectionResult {
   critical_count: number;
   processing_time_ms: number;
   inference_engine: string;
+  model_version: string;
+  gpu_status: string;
+  cpu_usage_pct: number;
+  memory_usage_mb: number;
+  queue_position: number;
   inspected_at?: string;
   operator?: string;
 }
@@ -92,9 +101,13 @@ export interface DigitalTwinState {
   health_score: number;
   risk_score: number;
   temperature_celsius: number;
+  pressure_psi: number;
+  rotation_rpm: number;
   maintenance_status: string;
   inspection_progress_pct: number;
   views_completed: VisionViewType[];
+  historical_health_trend: number[];
+  historical_risk_trend: number[];
   last_updated: string;
 }
 
@@ -147,6 +160,17 @@ export interface VisionStatistics {
   most_common_defect: string;
   critical_defect_rate_pct: number;
   avg_inspection_time_seconds: number;
+  avg_queue_time_ms: number;
+  active_gpu_utilization_pct: number;
+}
+
+export interface CreateMaintenanceTicketRequest {
+  session_id: string;
+  asset_id?: string;
+  finding_id: string;
+  defect_type: string;
+  priority: MaintenancePriority;
+  estimated_cost: number;
 }
 
 // UI-only types

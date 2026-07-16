@@ -2,7 +2,7 @@
  * DigitalTwinWidget — Live asset twin state panel updated per inspection.
  */
 import { motion } from "framer-motion";
-import { Activity, ThermometerSun, ShieldAlert, Wrench, CheckCircle2 } from "lucide-react";
+import { Activity, ThermometerSun, ShieldAlert, Wrench, CheckCircle2, Wind, RotateCcw } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { DigitalTwinState, VisionViewType } from "@/types/vision";
 
@@ -129,6 +129,18 @@ export function DigitalTwinWidget({ twin }: DigitalTwinWidgetProps) {
           label="Temperature"
           value={`${twin.temperature_celsius.toFixed(1)}°C`}
           valueClass={twin.temperature_celsius > 55 ? "text-red-400" : twin.temperature_celsius > 40 ? "text-amber-400" : "text-teal-400"}
+        />
+        <MetricRow
+          icon={Wind}
+          label="Pressure"
+          value={`${twin.pressure_psi.toFixed(1)} PSI`}
+          valueClass={twin.pressure_psi > 20 ? "text-red-400" : "text-slate-200"}
+        />
+        <MetricRow
+          icon={RotateCcw}
+          label="Rotation"
+          value={`${twin.rotation_rpm.toFixed(0)} RPM`}
+          valueClass={twin.rotation_rpm < 1000 ? "text-red-400" : "text-emerald-400"}
         />
         <MetricRow
           icon={Wrench}

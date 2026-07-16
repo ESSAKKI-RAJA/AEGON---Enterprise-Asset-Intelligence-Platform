@@ -10,6 +10,7 @@ import type {
   UploadViewResponse,
   VisionStatistics,
   VisionViewType,
+  CreateMaintenanceTicketRequest,
 } from "@/types/vision";
 
 const BASE = "/vision";
@@ -113,5 +114,19 @@ export function useVisionStatistics() {
       return response as unknown as VisionStatistics;
     },
     staleTime: 60_000,
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Maintenance Ticket Creation
+// ---------------------------------------------------------------------------
+
+export function useCreateMaintenanceTicket(onSuccess?: (data: { ticket_id: string }) => void) {
+  return useMutation<{ ticket_id: string }, Error, CreateMaintenanceTicketRequest>({
+    mutationFn: async (payload) => {
+      const response = await apiClient.post(`${BASE}/create-maintenance-ticket`, payload);
+      return response as unknown as { ticket_id: string };
+    },
+    onSuccess,
   });
 }

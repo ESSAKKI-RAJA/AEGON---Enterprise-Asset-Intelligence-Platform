@@ -14,6 +14,11 @@ import {
   ZoomOut,
   RotateCcw,
   Maximize2,
+  Camera,
+  MonitorPlay,
+  Smartphone,
+  Layers,
+  ActivitySquare
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ViewInspectionResult, ViewPanelState, DefectFinding } from "@/types/vision";
@@ -24,7 +29,15 @@ interface ViewInspectorProps {
   onFileSelect: (file: File) => void;
   onAnalyze: () => void;
   compact?: boolean;
+  showHeatmapGlobal?: boolean;
 }
+
+const SOURCES = [
+  { id: "upload", label: "Upload", icon: Upload },
+  { id: "usb", label: "USB Cam", icon: Camera },
+  { id: "rtsp", label: "IP/RTSP", icon: MonitorPlay },
+  { id: "mobile", label: "Mobile", icon: Smartphone },
+];
 
 const SEVERITY_COLORS = {
   critical: "#ef4444",
@@ -42,32 +55,56 @@ const SEVERITY_BG = {
   none: "border-slate-700 bg-slate-900/50",
 };
 
-function BoundingBoxOverlay({ findings }: { findings: DefectFinding[] }) {
+function BoundingBoxOverlay({ findings, showHeatmap }: { findings: DefectFinding[], showHeatmap: boolean }) {
   return (
     <div className="absolute inset-0 pointer-events-none">
       {findings
         .filter((f) => f.bounding_box)
         .map((finding, i) => {
           const bb = finding.bounding_box!;
+          const sevColor = SEVERITY_COLORS[finding.severity];
           return (
-            <div
-              key={i}
-              className="absolute border-2 rounded-sm group"
-              style={{
-                left: `${bb.x * 100}%`,
-                top: `${bb.y * 100}%`,
-                width: `${bb.width * 100}%`,
-                height: `${bb.height * 100}%`,
-                borderColor: SEVERITY_COLORS[finding.severity],
-                boxShadow: `0 0 8px ${SEVERITY_COLORS[finding.severity]}50`,
-              }}
-            >
-              <div
-                className="absolute -top-5 left-0 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded whitespace-nowrap"
-                style={{ backgroundColor: SEVERITY_COLORS[finding.severity] }}
-              >
-                {finding.defect_type} {Math.round(finding.confidence * 100)}%
-              </div>
+            <div key={`box-${i}`}>
+              {showHeatmap ? (
+                <div
+                  className="absolute rounded-full opacity-60 mix-blend-screen transition-opacity duration-500"
+                  style={{
+                    left: `${(bb.x - bb.width/2) * 100}%`,
+                    top: `${(bb.y - bb.height/2) * 100}%`,
+                    width: `${bb.width * 200}%`,
+                    height: `${bb.height * 200}%`,
+                    background: `radial-gradient(circle, ${sevColor}ff 0%, ${sevColor}00 70%)`,
+                    filter: "blur(8px)",
+                  }}
+                />
+              ) : (
+                <div
+                  className="absolute border-2 rounded-sm group transition-all duration-300"
+                  style={{
+                    left: `${bb.x * 100}%`,
+                    top: `${bb.y * 100}%`,
+                    width: `${bb.width * 100}%`,
+                    height: `${bb.height * 100}%`,
+                    borderColor: sevColor,
+                    boxShadow: `0 0 8px ${sevColor}50`,
+                  }}
+                >
+                  {finding.mask_points && finding.mask_points.length > 0 && (
+                    <svg className="absolute inset-0 w-full h-full overflow-visible opacity-30" viewBox="0 0 100 100" preserveAspectRatio="none">
+                       <polygon
+                          points={finding.mask_points.map(p => `${p[0]*100},${p[1]*100}`).join(" ")}
+                          fill={sevColor}
+                       />
+                    </svg>
+                  )}
+                  <div
+                    className="absolute -top-5 left-0 text-[9px] font-mono font-bold px-1.5 py-0.5 rounded whitespace-nowrap"
+                    style={{ backgroundColor: sevColor }}
+                  >
+                    {finding.defect_type} {Math.round(finding.confidence * 100)}%
+                  </div>
+                </div>
+              )}
             </div>
           );
         })}
@@ -76,32 +113,40 @@ function BoundingBoxOverlay({ findings }: { findings: DefectFinding[] }) {
 }
 
 function ScanAnimation() {
+  const [stage, setStage] = useState(0);
+  const stages = [
+    "ACQUIRING IMAGE...",
+    "NORMALIZING...",
+    "OBJECT DETECTION...",
+    "SEGMENTATION...",
+    "SEVERITY CLASSIFICATION...",
+    "UPDATING DIGITAL TWIN..."
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setStage(s => (s + 1) % stages.length);
+    }, 600);
+    return () => clearInterval(timer);
+  }, [stages.length]);
+
   return (
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {/* Horizontal scan line */}
+    <div className="absolute inset-0 overflow-hidden pointer-events-none z-10 flex flex-col items-center justify-center bg-slate-950/40 backdrop-blur-[2px]">
       <motion.div
-        className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-80"
+        className="absolute left-0 right-0 h-0.5 bg-gradient-to-r from-transparent via-teal-400 to-transparent opacity-80 shadow-[0_0_8px_rgba(45,212,191,0.8)]"
         animate={{ top: ["0%", "100%", "0%"] }}
-        transition={{ duration: 2.5, repeat: Infinity, ease: "linear" }}
+        transition={{ duration: 2.0, repeat: Infinity, ease: "linear" }}
       />
-      {/* Corner brackets */}
-      {[
-        "top-2 left-2 border-t-2 border-l-2",
-        "top-2 right-2 border-t-2 border-r-2",
-        "bottom-2 left-2 border-b-2 border-l-2",
-        "bottom-2 right-2 border-b-2 border-r-2",
-      ].map((cls, i) => (
-        <div
-          key={i}
-          className={cn("absolute w-4 h-4 border-teal-400 opacity-90", cls)}
-        />
-      ))}
-      {/* Grid overlay */}
+      
+      <div className="bg-slate-900/80 border border-teal-500/30 px-4 py-2 rounded-lg flex items-center gap-3">
+         <Loader2 className="h-4 w-4 text-teal-400 animate-spin" />
+         <p className="text-[10px] font-mono text-teal-400 font-bold">{stages[stage]}</p>
+      </div>
+
       <div
-        className="absolute inset-0 opacity-5"
+        className="absolute inset-0 opacity-10 mix-blend-overlay"
         style={{
-          backgroundImage:
-            "linear-gradient(rgba(20,184,166,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.5) 1px, transparent 1px)",
+          backgroundImage: "linear-gradient(rgba(20,184,166,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.5) 1px, transparent 1px)",
           backgroundSize: "20px 20px",
         }}
       />
@@ -115,11 +160,18 @@ export function ViewInspector({
   onFileSelect,
   onAnalyze,
   compact = false,
+  showHeatmapGlobal = false,
 }: ViewInspectorProps) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [zoom, setZoom] = useState(1);
   const [showBoxes, setShowBoxes] = useState(true);
+  const [showHeatmap, setShowHeatmap] = useState(showHeatmapGlobal);
+  const [source, setSource] = useState<string>("upload");
+
+  useEffect(() => {
+    setShowHeatmap(showHeatmapGlobal);
+  }, [showHeatmapGlobal]);
 
   const handleDrop = useCallback(
     (e: React.DragEvent) => {
@@ -186,12 +238,20 @@ export function ViewInspector({
           {result && (
             <>
               <button
+                onClick={() => setShowHeatmap((v) => !v)}
+                className={cn("p-1 rounded transition-colors", showHeatmap ? "text-indigo-400 bg-indigo-950/30" : "text-slate-500 hover:text-indigo-400")}
+                title="Toggle Heatmap"
+              >
+                <Layers className="h-3 w-3" />
+              </button>
+              <button
                 onClick={() => setShowBoxes((v) => !v)}
-                className="p-1 rounded text-slate-500 hover:text-teal-400 transition-colors"
-                title={showBoxes ? "Hide bounding boxes" : "Show bounding boxes"}
+                className={cn("p-1 rounded transition-colors", showBoxes ? "text-teal-400 bg-teal-950/30" : "text-slate-500 hover:text-teal-400")}
+                title="Toggle Bounding Boxes"
               >
                 <Eye className="h-3 w-3" />
               </button>
+              <div className="w-px h-3 bg-slate-700 mx-0.5" />
               <button
                 onClick={() => setZoom((z) => Math.min(z + 0.3, 3))}
                 className="p-1 rounded text-slate-500 hover:text-teal-400 transition-colors"
@@ -218,29 +278,65 @@ export function ViewInspector({
       {/* Main body */}
       <div className="flex-1 relative">
         {panel.status === "idle" && !panel.previewUrl && (
-          <div
-            className={cn(
-              "absolute inset-0 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all",
-              isDragging && "bg-teal-950/30 border-teal-500/50",
-            )}
-            onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
-            onDragLeave={() => setIsDragging(false)}
-            onDrop={handleDrop}
-            onClick={() => inputRef.current?.click()}
-          >
-            <input
-              ref={inputRef}
-              type="file"
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileChange}
-            />
-            <div className="p-2 rounded-lg border border-slate-700 bg-slate-800/50">
-              <Upload className="h-4 w-4 text-slate-400" />
+          <div className="absolute inset-0 flex flex-col">
+            {/* Source Selector Header */}
+            <div className="flex items-center justify-between px-2 py-1.5 bg-slate-900 border-b border-slate-800">
+              {SOURCES.map(s => {
+                const Icon = s.icon;
+                return (
+                  <button
+                    key={s.id}
+                    onClick={() => setSource(s.id)}
+                    className={cn(
+                      "flex items-center gap-1 px-1.5 py-1 rounded text-[9px] font-mono transition-colors",
+                      source === s.id ? "bg-indigo-600/20 text-indigo-400" : "text-slate-500 hover:text-slate-300 hover:bg-slate-800"
+                    )}
+                  >
+                    <Icon className="h-2.5 w-2.5" />
+                    <span className="hidden sm:inline">{s.label}</span>
+                  </button>
+                )
+              })}
             </div>
-            <p className="text-[10px] font-mono text-slate-500 text-center px-2">
-              Drop image or click
-            </p>
+
+            {source === "upload" ? (
+              <div
+                className={cn(
+                  "flex-1 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all",
+                  isDragging && "bg-teal-950/30 border-teal-500/50",
+                )}
+                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragLeave={() => setIsDragging(false)}
+                onDrop={handleDrop}
+                onClick={() => inputRef.current?.click()}
+              >
+                <input
+                  ref={inputRef}
+                  type="file"
+                  accept="image/*"
+                  className="hidden"
+                  onChange={handleFileChange}
+                />
+                <div className="p-2 rounded-lg border border-slate-700 bg-slate-800/50">
+                  <Upload className="h-4 w-4 text-slate-400" />
+                </div>
+                <p className="text-[10px] font-mono text-slate-500 text-center px-2">
+                  Drop image or click
+                </p>
+              </div>
+            ) : (
+              <div className="flex-1 flex flex-col items-center justify-center bg-slate-950">
+                {/* Mock Camera Feed */}
+                <ActivitySquare className="h-6 w-6 text-indigo-500/50 animate-pulse mb-2" />
+                <p className="text-[9px] font-mono text-indigo-400">CONNECTING TO {source.toUpperCase()} STREAM...</p>
+                <button
+                   onClick={() => onAnalyze()}
+                   className="mt-4 px-3 py-1 text-[10px] font-mono font-bold border border-indigo-500/30 text-indigo-400 rounded hover:bg-indigo-950/50"
+                >
+                   CAPTURE & ANALYZE
+                </button>
+              </div>
+            )}
           </div>
         )}
 
@@ -256,8 +352,8 @@ export function ViewInspector({
                 alt={`${panel.label} view`}
                 className="w-full h-full object-cover"
               />
-              {panel.status === "complete" && result && showBoxes && (
-                <BoundingBoxOverlay findings={result.findings} />
+              {panel.status === "complete" && result && (
+                <BoundingBoxOverlay findings={result.findings} showHeatmap={showHeatmap} />
               )}
             </div>
             {panel.status === "analyzing" && <ScanAnimation />}

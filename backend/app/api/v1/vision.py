@@ -28,6 +28,7 @@ from app.schemas.vision import (
     VisionStatistics,
     VisionViewType,
     ViewInspectionResult,
+    CreateMaintenanceTicketRequest,
 )
 from app.services.vision_service import VisionInspectionService
 
@@ -192,6 +193,26 @@ async def generate_report(body: Generate360Request) -> dict:
     try:
         report_data = _vision_service.generate_report_data(body.session_id)
         return _standard_response(data=report_data, message="Report data generated.")
+    except Exception as exc:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=str(exc),
+        ) from exc
+
+
+# ---------------------------------------------------------------------------
+# Ticket Creation
+# ---------------------------------------------------------------------------
+
+@router.post("/create-maintenance-ticket", response_model=dict, summary="Create a maintenance ticket from a defect finding")
+async def create_maintenance_ticket(body: CreateMaintenanceTicketRequest) -> dict:
+    """Mock integration with the Maintenance module."""
+    try:
+        ticket_id = _vision_service.create_maintenance_ticket(body.session_id, body.defect_type)
+        return _standard_response(
+            data={"ticket_id": ticket_id},
+            message=f"Maintenance ticket {ticket_id} created successfully."
+        )
     except Exception as exc:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,

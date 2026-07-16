@@ -156,7 +156,7 @@ class MockInferenceEngine(BaseInferenceEngine):
     """
 
     def __init__(self, seed: Optional[int] = None):
-        self._rng = random.Random(seed)
+        self._base_seed = seed if seed is not None else random.randint(0, 10000)
 
     def run_inference(
         self,
@@ -164,15 +164,20 @@ class MockInferenceEngine(BaseInferenceEngine):
         view_type: VisionViewType,
         context: Dict[str, Any],
     ) -> List[Dict[str, Any]]:
-        """Generate realistic mock detections."""
-        # Simulate processing time (50ms – 800ms)
-        time.sleep(self._rng.uniform(0.05, 0.15))
+        """Generate realistic mock detections using session seed."""
+        # Use session_id + view_type for deterministic randomness
+        session_id = context.get("session_id", str(uuid.uuid4()))
+        seed_str = f"{self._base_seed}_{session_id}_{view_type.value}"
+        session_seed = sum(ord(c) for c in seed_str)
+        rng = random.Random(session_seed)
+
+        # Simulate processing time (300ms - 1200ms) for pipeline animation realism
+        time.sleep(rng.uniform(0.3, 1.2))
 
         catalog = DEFECT_CATALOG.get(view_type, [])
         if not catalog:
             return []
 
-        # Base detection probability per view type
         base_probs: Dict[VisionViewType, float] = {
             VisionViewType.TOP: 0.60,
             VisionViewType.BOTTOM: 0.55,
@@ -185,10 +190,15 @@ class MockInferenceEngine(BaseInferenceEngine):
 
         detections: List[Dict[str, Any]] = []
         for defect in catalog:
-            if self._rng.random() < base_prob:
-                # Higher severity → higher confidence (more obvious defects)
-                conf = defect["severity_weight"] * 0.4 + self._rng.uniform(0.45, 0.60)
+            if rng.random() < base_prob:
+                conf = defect["severity_weight"] * 0.4 + rng.uniform(0.45, 0.60)
                 conf = min(conf, 0.99)
+                
+                # Mock mask points for segmentation
+                mask_points = [
+                    [round(rng.uniform(0.1, 0.9), 2), round(rng.uniform(0.1, 0.9), 2)]
+                    for _ in range(rng.randint(4, 8))
+                ]
 
                 detections.append({
                     "defect_type": defect["type"],
@@ -196,11 +206,13 @@ class MockInferenceEngine(BaseInferenceEngine):
                     "confidence": round(conf, 3),
                     "action": defect["action"],
                     "bbox": {
-                        "x": round(self._rng.uniform(0.05, 0.75), 3),
-                        "y": round(self._rng.uniform(0.05, 0.75), 3),
-                        "width": round(self._rng.uniform(0.05, 0.25), 3),
-                        "height": round(self._rng.uniform(0.05, 0.20), 3),
+                        "x": round(rng.uniform(0.05, 0.75), 3),
+                        "y": round(rng.uniform(0.05, 0.75), 3),
+                        "width": round(rng.uniform(0.05, 0.25), 3),
+                        "height": round(rng.uniform(0.05, 0.20), 3),
                     },
+                    "mask_points": mask_points,
+                    "heatmap_data": f"mock_heatmap_{rng.randint(100, 999)}"
                 })
 
         return detections
@@ -324,6 +336,10 @@ class VisionInspectionService:
                 recommended_action=det["action"],
                 bounding_box=bbox,
                 area_affected_pct=round(det["bbox"]["width"] * det["bbox"]["height"] * 100, 1),
+                heatmap_data=det["heatmap_data"],
+                mask_points=det["mask_points"],
+                estimated_repair_cost=round(det["severity_weight"] * 5000 + random.uniform(100, 500), 2),
+                estimated_repair_time_mins=int(det["severity_weight"] * 240 + random.uniform(30, 60))
             )
             findings.append(finding)
 
@@ -332,6 +348,9 @@ class VisionInspectionService:
         critical_count = sum(1 for f in findings if f.severity == DefectSeverity.CRITICAL)
 
         processing_time = time.time() * 1000 - start_ms
+        
+        # Determine GPU / Enterprise metadata
+        gpu_status = random.choice(["NVIDIA A100 - Optimal", "NVIDIA H100 - Active", "Cluster 04 - Active"])
 
         result = ViewInspectionResult(
             view_type=view_type,
@@ -342,6 +361,11 @@ class VisionInspectionService:
             critical_count=critical_count,
             processing_time_ms=round(processing_time, 1),
             inference_engine=self._engine.get_engine_name(),
+            model_version="AEGON-Vision-V6.5-Enterprise",
+            gpu_status=gpu_status,
+            cpu_usage_pct=round(random.uniform(15.0, 45.0), 1),
+            memory_usage_mb=round(random.uniform(4000.0, 12000.0), 1),
+            queue_position=random.randint(0, 2),
             inspected_at=datetime.utcnow(),
             operator=operator,
         )
@@ -631,8 +655,10 @@ class VisionInspectionService:
         health = self.calculate_health_score(view_results)
         risk = self.calculate_risk_score(view_results)
 
-        # Simulate temperature rising with risk
+        # Simulate temperature, pressure, and rotation
         temperature = round(25.0 + (risk / 100.0) * 40.0, 1)
+        pressure = round(14.7 + (risk / 100.0) * 10.0, 1)
+        rotation = round(1200.0 - (risk / 100.0) * 400.0, 1) if risk < 80 else 0.0
 
         progress = (len(views_done) / total_views) * 100
 
@@ -641,15 +667,23 @@ class VisionInspectionService:
             else "Schedule Within 30 Days" if risk > 40
             else "Up to Date"
         )
+        
+        # Generate simulated historical trends
+        hist_health = [min(100.0, health + (i * 2) + random.uniform(-3, 3)) for i in range(10, 0, -1)] + [health]
+        hist_risk = [max(0.0, risk - (i * 2) + random.uniform(-3, 3)) for i in range(10, 0, -1)] + [risk]
 
         session.digital_twin = DigitalTwinState(
             asset_name=session.asset_name,
             health_score=health,
             risk_score=risk,
             temperature_celsius=temperature,
+            pressure_psi=pressure,
+            rotation_rpm=rotation,
             maintenance_status=maintenance_status,
             inspection_progress_pct=round(progress, 1),
             views_completed=[VisionViewType(v) for v in views_done],
+            historical_health_trend=[round(x, 1) for x in hist_health],
+            historical_risk_trend=[round(x, 1) for x in hist_risk],
             last_updated=datetime.utcnow(),
         )
 
@@ -718,7 +752,18 @@ class VisionInspectionService:
             most_common_defect=most_common,
             critical_defect_rate_pct=round(critical_rate, 1),
             avg_inspection_time_seconds=2.5,  # Mock average
+            avg_queue_time_ms=145.2,
+            active_gpu_utilization_pct=68.5,
         )
+
+    def create_maintenance_ticket(self, session_id: str, defect_type: str) -> str:
+        """Mocks integrating with Maintenance module."""
+        session = self.get_session(session_id)
+        if not session:
+            raise ValueError(f"Session {session_id} not found")
+        ticket_id = f"MNT-{random.randint(10000, 99999)}"
+        logger.info(f"Generated maintenance ticket {ticket_id} for {defect_type} in session {session_id}")
+        return ticket_id
 
     # ------------------------------------------------------------------
     # Report Data
