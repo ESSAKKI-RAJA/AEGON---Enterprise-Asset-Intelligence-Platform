@@ -16,29 +16,13 @@ class Settings(BaseSettings):
         "http://localhost:8080",
     ]
 
+    # SUPABASE
+    SUPABASE_URL: str
+    SUPABASE_SECRET_KEY: str
+    SUPABASE_JWKS_URL: str
+
     # DATABASE
-    POSTGRES_SERVER: str = "localhost"
-    POSTGRES_USER: str = "postgres"
-    POSTGRES_PASSWORD: str = "postgres"
-    POSTGRES_DB: str = "aegon_db"
-    POSTGRES_PORT: str = "5432"
-
-    # DB Pool
-    DB_POOL_SIZE: int = 50
-    DB_MAX_OVERFLOW: int = 20
-
-    # Database Type
-    USE_SQLITE: bool = True  # Set to False to use Postgres in production
-
-    @computed_field
-    @property
-    def SQLALCHEMY_DATABASE_URI(self) -> str:
-        if self.USE_SQLITE:
-            return "sqlite+aiosqlite:///./aegon.db"
-        return (
-            f"postgresql+asyncpg://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
-            f"@{self.POSTGRES_SERVER}:{self.POSTGRES_PORT}/{self.POSTGRES_DB}"
-        )
+    DATABASE_URL: str
 
     # REDIS
     REDIS_HOST: str = "localhost"
@@ -65,9 +49,8 @@ class Settings(BaseSettings):
         )
 
     # AUTHENTICATION
-    # Enterprise Evaluation Edition ships without authentication.
-    # Production: configure Clerk, Azure AD, Okta, or Auth0 credentials here.
-    # See README > Enterprise Authentication Roadmap.
+    # Production authentication uses Supabase Auth (RS256 JWT via JWKS).
+    # See SUPABASE_JWKS_URL above and backend/app/core/security.py.
 
     model_config = SettingsConfigDict(
         env_file=".env",

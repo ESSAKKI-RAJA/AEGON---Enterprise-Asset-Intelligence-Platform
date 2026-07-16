@@ -3,8 +3,8 @@ AEGON Auth API — Enterprise Evaluation Edition
 ================================================
 GET /auth/me — returns the static Enterprise Evaluation User profile.
 
-The /sync endpoint (Clerk user upsert) is removed in evaluation mode.
-In production, /sync is called on first login to register the Clerk user
+The /sync endpoint (Supabase user upsert) is removed in evaluation mode.
+In production, /sync is called on first login to register the Supabase Auth user
 in the AEGON database.
 """
 
@@ -20,7 +20,7 @@ router = APIRouter()
 async def get_me() -> Any:
     """
     Return the Enterprise Evaluation User profile.
-    In production: requires valid Clerk Bearer token and returns DB user record.
+    In production: requires valid Supabase Bearer token and returns DB user record.
     """
     return {
         "data": {
@@ -30,7 +30,7 @@ async def get_me() -> Any:
             "is_active": DEMO_USER.is_active,
             "role": DEMO_USER.role_name,
             "department": DEMO_USER.department_name,
-            "clerk_user_id": DEMO_USER.clerk_user_id,
+            "supabase_user_id": DEMO_USER.supabase_user_id,
             "evaluation_mode": True,
         }
     }

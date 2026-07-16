@@ -2,23 +2,18 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import declarative_base
 from app.core.config import settings
 
-engine_kwargs = {
-    "echo": False,
-    "future": True,
-}
+# Supabase PostgreSQL — pool settings for production-grade connection handling
+DB_POOL_SIZE = 20
+DB_MAX_OVERFLOW = 10
 
-if not settings.SQLALCHEMY_DATABASE_URI.startswith("sqlite"):
-    engine_kwargs.update({
-        "pool_size": settings.DB_POOL_SIZE,
-        "max_overflow": settings.DB_MAX_OVERFLOW,
-        "pool_pre_ping": True,
-        "pool_recycle": 3600,
-    })
-
-# Create the async engine
 engine = create_async_engine(
-    settings.SQLALCHEMY_DATABASE_URI,
-    **engine_kwargs
+    settings.DATABASE_URL,
+    echo=False,
+    future=True,
+    pool_size=DB_POOL_SIZE,
+    max_overflow=DB_MAX_OVERFLOW,
+    pool_pre_ping=True,
+    pool_recycle=3600,
 )
 
 # Create a session factory
@@ -27,11 +22,12 @@ AsyncSessionLocal = async_sessionmaker(
     class_=AsyncSession,
     expire_on_commit=False,
     autocommit=False,
-    autoflush=False
+    autoflush=False,
 )
 
 # Base class for declarative models
 Base = declarative_base()
+
 
 async def get_db():
     """

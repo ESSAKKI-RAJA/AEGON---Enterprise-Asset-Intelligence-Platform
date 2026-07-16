@@ -37,15 +37,15 @@ class UserRepository(BaseRepository[User]):
         except Exception as e:
             raise translate_db_exception(e)
 
-    async def get_by_clerk_user_id(self, clerk_user_id: str) -> Optional[User]:
-        """Retrieve a user by their Clerk user ID (sub claim), excluding soft deleted users."""
+    async def get_by_supabase_user_id(self, supabase_user_id: str) -> Optional[User]:
+        """Retrieve a user by their Supabase Auth user ID (sub claim), excluding soft deleted users."""
         from sqlalchemy.orm import selectinload
         try:
             stmt = select(self.model_class).options(
                 selectinload(self.model_class.role),
                 selectinload(self.model_class.department)
             ).where(
-                self.model_class.clerk_user_id == clerk_user_id,
+                self.model_class.supabase_user_id == supabase_user_id,
                 self.model_class.is_deleted == False
             )
             result = await self.session.execute(stmt)
@@ -70,3 +70,12 @@ class RoleRepository(BaseRepository[Role]):
             cache_hook=cache_hook,
             audit_hook=audit_hook,
         )
+
+    async def get_by_name(self, name: str) -> Optional[Role]:
+        """Retrieve a role by its name."""
+        try:
+            stmt = select(self.model_class).where(self.model_class.name == name)
+            result = await self.session.execute(stmt)
+            return result.scalar_one_or_none()
+        except Exception as e:
+            raise translate_db_exception(e)

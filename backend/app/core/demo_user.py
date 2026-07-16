@@ -1,11 +1,11 @@
 """
 AEGON Demo User — Enterprise Evaluation Edition
 ================================================
-This module defines the static Enterprise Evaluation User that is injected
-into all dependency-injection points in demo mode.
+This module defines the static Enterprise Evaluation User injected into all
+dependency-injection points in evaluation mode.
 
-Production deployments replace this with real Clerk JWT verification,
-Azure AD, Okta, or Auth0 integration. See README > Authentication Roadmap.
+Production deployments replace this with real Supabase Auth JWT verification.
+See README > Authentication Roadmap.
 """
 
 from dataclasses import dataclass, field
@@ -24,7 +24,8 @@ class DemoUser:
     role_name: str = "super_admin"
     department_name: str = "Executive Operations"
     is_active: bool = True
-    clerk_user_id: Optional[str] = None
+    # Supabase Auth user ID (the `sub` claim from Supabase JWTs)
+    supabase_user_id: Optional[str] = "00000000-0000-0000-0000-000000000001"
 
     @property
     def full_name(self) -> str:

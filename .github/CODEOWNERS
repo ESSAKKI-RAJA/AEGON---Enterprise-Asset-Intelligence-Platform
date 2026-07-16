@@ -1,0 +1,34 @@
+# CODEOWNERS
+#
+# This file defines the code ownership rules for the AEGON repository.
+# See: https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+#
+# Order is important. The last matching pattern has the highest precedence.
+
+# Default: all changes require a review from the core team
+*                                   @aegon-enterprise/core-team
+
+# Backend architecture — critical modules require a senior engineer review
+/backend/app/core/                  @aegon-enterprise/backend-leads
+/backend/app/services/              @aegon-enterprise/backend-leads
+/backend/app/repositories/         @aegon-enterprise/backend-leads
+/backend/alembic/                   @aegon-enterprise/database-admins
+
+# AI & ML pipelines — high impact, requires specialist review
+/backend/app/ai/                    @aegon-enterprise/ai-engineers
+/backend/app/ml/                    @aegon-enterprise/ai-engineers
+
+# Security-critical files — always require a security review
+/backend/app/core/security.py       @aegon-enterprise/security-team
+/SECURITY.md                        @aegon-enterprise/security-team
+
+# Frontend
+/frontend/src/                      @aegon-enterprise/frontend-leads
+
+# Infrastructure & deployment
+/.github/workflows/                 @aegon-enterprise/devops
+/Dockerfile*                        @aegon-enterprise/devops
+
+# Documentation
+/docs/                              @aegon-enterprise/tech-writers @aegon-enterprise/core-team
+/README.md                          @aegon-enterprise/tech-writers @aegon-enterprise/core-team

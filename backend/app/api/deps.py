@@ -6,8 +6,8 @@ Provides FastAPI dependency injection for database sessions and services.
 Authentication is bypassed in this evaluation edition. All auth-gated
 dependencies return the static Enterprise Evaluation User.
 
-In production, `get_current_user` verifies a Clerk RS256 JWT, looks up the
-user in PostgreSQL, and enforces RBAC/ABAC rules.
+In production, `get_current_user` verifies a Supabase RS256 JWT against
+SUPABASE_JWKS_URL, looks up the user in PostgreSQL, and enforces RBAC/ABAC.
 """
 
 from typing import AsyncGenerator
@@ -53,7 +53,7 @@ def get_uow(db: AsyncSession = Depends(get_db)) -> UnitOfWork:
 def get_current_user() -> DemoUser:
     """
     Returns the static Enterprise Evaluation User.
-    In production this verifies a Clerk JWT and looks up the DB record.
+    In production this verifies a Supabase JWT and looks up the DB record.
     """
     return DEMO_USER
 
@@ -97,6 +97,16 @@ def get_finance_service(uow: UnitOfWork = Depends(get_uow)) -> FinanceService:
 
 def get_analytics_service(db: AsyncSession = Depends(get_db)) -> AnalyticsService:
     return AnalyticsService(db=db)
+
+
+# ---------------------------------------------------------------------------
+# Supabase Service
+# ---------------------------------------------------------------------------
+from app.services.supabase_service import SupabaseService, get_supabase_service  # noqa: E402
+
+
+def get_supabase(supabase: SupabaseService = Depends(get_supabase_service)) -> SupabaseService:
+    return supabase
 
 
 # ---------------------------------------------------------------------------

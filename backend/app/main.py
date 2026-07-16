@@ -16,15 +16,23 @@ async def lifespan(app: FastAPI):
     setup_logging()
     print("STEP 2: Logging setup complete")
     
+    if not settings.DATABASE_URL:
+        raise ValueError("DATABASE_URL environment variable is missing. Cannot start application.")
+        
+    if not settings.DATABASE_URL.startswith("postgresql+asyncpg://"):
+        raise ValueError("DATABASE_URL must use the asyncpg driver (e.g., postgresql+asyncpg://...)")
+    
+    print("STEP 3: Database configuration validated")
+    
     container = Container()
-    print("STEP 3: Container created")
+    print("STEP 4: Container created")
     container.wire(packages=["app.api.v1"])
-    print("STEP 4: Container wired")
+    print("STEP 5: Container wired")
     app.container = container # type: ignore
     
-    print("STEP 5: Yielding to FastAPI")
+    print("STEP 6: Yielding to FastAPI")
     yield
-    print("STEP 6: Lifespan shutdown")
+    print("STEP 7: Lifespan shutdown")
 
 app = FastAPI(
     title="AEGON Enterprise API",

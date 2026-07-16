@@ -6,7 +6,7 @@
  * recruiters, executives, academics — can experience the full platform
  * without creating an account.
  *
- * Production deployments support Clerk, Azure AD, Okta, Auth0, and SAML.
+ * Production deployments support Supabase Auth.
  * See the README > Enterprise Authentication Roadmap for details.
  */
 
@@ -20,7 +20,7 @@ export interface AegonUser {
   role: string;
   department: string | null;
   initials: string;
-  clerkUserId: string | null;
+  supabaseUserId: string | null;
 }
 
 // ---------------------------------------------------------------------------
@@ -33,7 +33,7 @@ export const DEMO_USER: AegonUser = {
   role: "Super Administrator",
   department: "Executive Operations",
   initials: "EE",
-  clerkUserId: null,
+  supabaseUserId: "00000000-0000-0000-0000-000000000001",
 };
 
 // ---------------------------------------------------------------------------

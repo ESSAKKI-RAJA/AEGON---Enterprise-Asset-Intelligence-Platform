@@ -1,244 +1,154 @@
-<p align="center">
-  <img src="docs/aegon-logo.svg" alt="AEGON" width="80" />
-</p>
+<div align="center">
+  <h1>AEGON</h1>
+  <p><strong>Enterprise Asset Intelligence Platform</strong></p>
+  <p>
+    An advanced, async-first platform for physical asset management, predictive maintenance, and operational intelligence, built for modern enterprise environments.
+  </p>
+  
+  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+  [![Python 3.12](https://img.shields.io/badge/Python-3.12-blue.svg)](https://www.python.org/)
+  [![FastAPI](https://img.shields.io/badge/FastAPI-Production-009688.svg)](https://fastapi.tiangolo.com/)
+  [![React 19](https://img.shields.io/badge/React-19-61DAFB.svg)](https://react.dev/)
+</div>
 
-# AEGON
+<br />
 
-<p align="center"><strong>Enterprise Intelligence Platform for Asset-Centric Operations</strong></p>
-<p align="center"><em>Enterprise Evaluation Edition (v5.0.0)</em></p>
-
-<p align="center">
-  <a href="#executive-summary"><img src="https://img.shields.io/badge/Status-Enterprise_Evaluation-blue?style=for-the-badge" alt="Status" /></a>
-  <a href="#machine-learning"><img src="https://img.shields.io/badge/Intelligence-ML_%2B_AI-indigo?style=for-the-badge" alt="AI" /></a>
-  <a href="#technical-stack"><img src="https://img.shields.io/badge/Architecture-Python_First-yellow?style=for-the-badge" alt="Architecture" /></a>
-</p>
-
----
-
-## Executive Summary
-
-AEGON is a comprehensive **Enterprise Intelligence Platform** designed to solve complex operational challenges in asset-intensive industries (Manufacturing, Energy, Logistics, Utilities). 
-
-While traditional Enterprise Asset Management (EAM) and ERP systems function as reactive systems of record, AEGON operates as a **proactive system of intelligence**. It bridges the gap between raw machine data, maintenance operations, procurement, and executive financial planning.
-
-By combining Machine Learning, Business Analytics, and a Digital Twin architecture, AEGON transforms siloed operational data into **Decision Intelligence**—delivering executive-level visibility and actionable, AI-driven recommendations across the enterprise.
-
-This repository is an **Enterprise Evaluation Edition**, built to demonstrate production-grade software engineering, advanced system architecture, and enterprise UX to technical leaders, product managers, and academic reviewers.
+AEGON provides a unified control plane for complex industrial and physical asset ecosystems. By bridging the gap between raw IoT telemetry, visual intelligence, and business-critical logic, it delivers actionable insights directly to operators, engineers, and executives.
 
 ---
 
-## Why AEGON Exists
+## Philosophy
 
-Large enterprises face critical operational blind spots:
+AEGON is built on a strict, unyielding foundation of **Clean Architecture** and **Domain-Driven Design (DDD)**. We prioritize:
+- **Separation of Concerns**: Repositories exclusively interact with the database. Business services encapsulate all business rules.
+- **Python-First Intelligence**: Heavy computational workloads, analytics, and machine learning operate exclusively in the backend.
+- **Deterministic UI**: The React frontend is completely agnostic to business logic. It visualizes data, captures intent, and delegates processing to the API layer.
+- **Security by Design**: JWT, RBAC, and ABAC paradigms are enforced cross-cuttingly at every interaction boundary.
 
-1. **Reactive Maintenance:** Equipment fails unexpectedly because maintenance is schedule-based, not condition-based, leading to millions in unplanned downtime.
-2. **Disconnected Systems:** Procurement, inventory, maintenance, and finance operate in silos. A delayed part delivery doesn't automatically trigger a financial risk warning or maintenance schedule adjustment.
-3. **Data Overload, Intelligence Deficit:** Sensors generate terabytes of telemetry, but operators lack the tooling to translate that data into prioritized actions.
-4. **Poor Executive Visibility:** C-suite leaders rely on stale, aggregated reports rather than real-time operational truth.
+## Core Capabilities
 
-**AEGON solves this** by centralizing the data, applying predictive models (to forecast failure and demand), and surfacing the insights through role-specific, action-oriented interfaces.
-
----
-
-## Vision
-
-AEGON is not just an Asset Management System; it is an **Enterprise Intelligence Platform**. 
-
-Our vision is to move organizations along the maturity curve:
-*From **Descriptive** (What happened?)*  
-*To **Predictive** (What will happen?)*  
-*To **Prescriptive** (What should we do?)*  
-*Towards **Autonomous Operations** (The system optimizes itself).*
-
-By leveraging a Digital Twin core, AEGON acts as the connective tissue for the enterprise—providing a unified operating picture that augments human decision-making at every level, from the shop floor to the boardroom.
+- **Digital Twin Telemetry**: Real-time asset monitoring via WebSocket-driven data streams.
+- **Enterprise Vision Intelligence**: Automated defect detection leveraging multi-source image acquisition (IP cameras, RTSP, mobile) and deployed ML models (e.g., YOLO, custom OpenCV pipelines).
+- **Predictive Maintenance**: Historical degradation trend analysis to shift maintenance models from reactive to proactive.
+- **Executive Copilot**: A Retrieval-Augmented Generation (RAG) assistant that grounds AI responses strictly in enterprise data and approved workflows, eliminating hallucination risks.
 
 ---
 
-## Product Philosophy
+## System Architecture
 
-- **Business-First Engineering:** Every feature is tied to a measurable business KPI (e.g., reducing MTTR, optimizing EOQ, improving ROI).
-- **Executive-First UX:** Complex data is distilled into clear, high-density, action-oriented dashboards. No fluff, no marketing metrics—just operational truth.
-- **Human-Centered AI:** AI does not replace operators; it augments them. Every AI recommendation includes the underlying reasoning, confidence score, and data lineage (Explainable AI).
-- **Enterprise Scalability:** Built on a decoupled, asynchronous, cloud-native architecture ready for massive scale.
+The repository implements a distinct separation between presentation, application logic, and infrastructure:
+
+```mermaid
+graph TD
+    UI[Frontend: React 19] --> API[API Gateway: FastAPI]
+    API --> Services[Business Services]
+    API --> AI[AI Engine & Vision]
+    Services --> Repositories[Data Repositories]
+    AI --> ML[Feature Pipelines]
+    Repositories --> DB[(Supabase PostgreSQL)]
+    Services --> Cache[(Redis Cache)]
+    Services --> Workers[Celery Async Workers]
+```
+
+## Technology Stack
+
+- **Frontend**: React 19, TypeScript, TailwindCSS v4, TanStack Query, Framer Motion, Recharts.
+- **Backend**: FastAPI, Pydantic v2, Dependency-Injector.
+- **Database**: PostgreSQL (Supabase), SQLAlchemy 2.0 (asyncpg driver), Alembic.
+- **Caching & Queues**: Redis, RabbitMQ, Celery.
+- **Machine Learning**: Scikit-Learn, XGBoost, OpenCV.
+- **Infrastructure**: Docker, Kubernetes ready, Terraform compliant.
 
 ---
 
-## Enterprise Architecture
-
-AEGON employs a decoupled, asynchronous, Clean Architecture, ensuring that business logic, ML pipelines, and data access remain strictly isolated.
+## Project Structure
 
 ```text
-┌─────────────────────────────────────────────────────────────────────────┐
-│                           FRONTEND LAYER (React 19)                     │
-│  State: TanStack Query & Zustand | Routing: TanStack Router | UI: Tailwind │
-├─────────────────────────────────────────────────────────────────────────┤
-│                           API LAYER (FastAPI)                           │
-│  RESTful & WebSockets | Pydantic Validation | Rate Limiting & Audit     │
-├──────────────┬──────────────┬────────────────────────┬──────────────────┤
-│   BUSINESS   │   ANALYTICS  │       ML ENGINE        │    AI COPILOT    │
-│   SERVICES   │  KPI Engine  │ Predictive Maintenance │  NLP Interface   │
-│ (DDD logic)  │ Trends & ROI │    Forecasting (EOQ)   │ Decision Support │
-├──────────────┴──────────────┴────────────────────────┴──────────────────┤
-│                          REPOSITORY LAYER                               │
-│            SQLAlchemy 2.0 (Async) | Unit of Work Pattern                │
-├─────────────────────────────────────────────────────────────────────────┤
-│                          INFRASTRUCTURE LAYER                           │
-│ PostgreSQL (Supabase) | Redis (Caching) | Celery/RabbitMQ (Workers)     │
-└─────────────────────────────────────────────────────────────────────────┘
+aegon/
+├── backend/               # FastAPI application
+│   ├── alembic/           # Database migration revisions
+│   ├── app/               # Core application logic
+│   │   ├── api/           # REST endpoints and routing
+│   │   ├── core/          # Configuration, security, and DI container
+│   │   ├── models/        # SQLAlchemy ORM models
+│   │   ├── repositories/  # Database access layer
+│   │   ├── schemas/       # Pydantic DTOs
+│   │   └── services/      # Domain business logic
+│   └── tests/             # Pytest suite
+├── frontend/              # React application
+│   ├── src/
+│   │   ├── components/    # Reusable UI elements
+│   │   ├── features/      # Domain-specific components
+│   │   ├── hooks/         # Custom React hooks
+│   │   └── routes/        # Application routing
+├── docs/                  # Architecture and engineering documentation
+└── .github/               # CI/CD workflows and community health templates
 ```
 
-- **Frontend:** Pure presentation. It visualizes data and captures intent, entirely decoupled from business logic.
-- **API:** A thin routing and validation layer. 
-- **Services:** The core of the application where all domain rules live.
-- **Background Workers:** Any operation taking >300ms (analytics aggregations, PDF generation, ML batch predictions) is offloaded to Celery.
-
 ---
 
-## Technical Stack
+## Quick Start
 
-| Component | Technology | Version | Purpose | Advantages / Tradeoffs |
-|-----------|------------|---------|---------|------------------------|
-| **Frontend UI** | React | 19.0 | Client-side rendering & component architecture | Unmatched ecosystem; requires disciplined state management. |
-| **Data Fetching** | TanStack Query | 5.0 | Async state management & caching | Eliminates useEffect data fetching; steep learning curve. |
-| **Styling** | Tailwind CSS | 4.0 | Utility-first styling & design tokens | Rapid iteration, consistent design system; dense markup. |
-| **Backend** | FastAPI | 0.115 | High-performance async API | Python-native, auto-docs, fast; requires strict async hygiene. |
-| **ORM** | SQLAlchemy | 2.0 | Asynchronous database interactions | Enterprise standard, powerful; complex relationship eager-loading. |
-| **Database** | PostgreSQL | 15+ | Relational, ACID-compliant data store | Proven reliability, JSONB support; requires strict migrations. |
-| **Cache & Queue** | Redis | 7.0 | KPI caching, session store, Celery broker | Blazing fast in-memory ops; volatile data requires persistence strategy. |
-| **Workers** | Celery | 5.4 | Background job processing | Distributed task execution; adds infrastructure complexity. |
-
----
-
-## Platform Modules
-
-### Executive Dashboard
-- **Objective:** Provide a real-time, top-down view of enterprise health and financial exposure.
-- **Implementation:** Aggregates data across all modules via Redis-cached analytics endpoints. Features Recharts visualizations and AI-curated intelligence feeds.
-- **KPIs:** Overall Asset Health, Financial Variance, Risk Exposure.
-
-### Asset Registry
-- **Objective:** Manage the full lifecycle and depreciation of physical and IT assets.
-- **Implementation:** Hierarchical data models, soft-deletes, full audit trails (who changed what and when).
-- **KPIs:** Total Value, Depreciation Rate, Utilization.
-
-### Maintenance Intelligence
-- **Objective:** Shift from reactive to predictive maintenance.
-- **Implementation:** Work orders are generated and ranked dynamically based on ML failure risk scores rather than static schedules.
-- **KPIs:** Mean Time To Repair (MTTR), Mean Time Between Failures (MTBF), Schedule Compliance.
-
-### Inventory Optimization
-- **Objective:** Ensure parts are available precisely when needed without overstocking.
-- **Implementation:** Algorithms calculate Economic Order Quantity (EOQ) and dynamic reorder points based on historical consumption and lead times.
-- **KPIs:** Stock Turnover, Stockout Risk, Holding Costs.
-
-### Finance Intelligence
-- **Objective:** Track CAPEX/OPEX and departmental budget variances in real-time.
-- **Implementation:** Financial transaction ledgers tied directly to maintenance and procurement events.
-- **KPIs:** Budget Variance, Maintenance Spend, ROI.
-
-### Procurement
-- **Objective:** Manage supplier relationships and track purchase orders.
-- **Implementation:** Vendor ranking based on delivery performance and defect rates.
-- **KPIs:** On-Time Delivery Rate, Spend per Vendor, Delivery Risk.
-
----
-
-## Machine Learning & Advanced Analytics
-
-AEGON is built Python-first to natively integrate data science and machine learning.
-
-### Machine Learning
-- **Predictive Maintenance:** Uses Scikit-learn and XGBoost to classify the probability of asset failure within the next 30 days based on usage telemetry and maintenance history.
-- **Demand Forecasting:** Uses Prophet for time-series forecasting to predict future inventory demand and optimize EOQ.
-- **Explainability:** Employs SHAP (SHapley Additive exPlanations) so operators understand *why* a machine is flagged for failure (e.g., "Temperature Anomaly: +15%").
-
-### Business Analytics
-- **Dynamic KPI Engine:** Computes complex aggregations (ROI, MTBF) dynamically and caches them in Redis for sub-50ms dashboard loads.
-- **Cost Optimization:** Identifies systemic financial inefficiencies across facilities.
-
-### Enterprise AI
-- **Decision Support:** Generates prescriptive recommendations (e.g., "Expedite bearing delivery due to 89% failure probability on Asset X").
-- **AEGON Copilot:** An interactive, context-aware interface allowing users to query enterprise data naturally.
-
-### Digital Twin
-- **Operational Awareness:** A real-time, digital representation of physical assets, allowing for simulation, health monitoring, and scenario analysis before physical execution.
-
----
-
-## Enterprise Authentication Roadmap
-
-> [!NOTE]
-> **This repository intentionally ships WITHOUT authentication.**
-
-The **Enterprise Evaluation Edition** is designed to allow reviewers, recruiters, and technical leaders to immediately evaluate the platform's business capabilities, architecture, and UX without the friction of account creation.
-
-For production deployments, the platform is architected to integrate with enterprise Identity Providers (IdPs):
-
-- **Clerk:** (Primary SaaS identity) SSO, B2B Organizations, RBAC.
-- **Azure Active Directory (Entra ID):** Enterprise SAML/OIDC.
-- **Okta / Auth0:** Workforce identity federation.
-- **SCIM:** Automated user provisioning and de-provisioning.
-- **Fine-Grained Authorization:** Attribute-Based Access Control (ABAC) ensuring users only see data within their organizational department.
-
-*Authentication is infrastructure; this evaluation edition focuses on the product and intelligence.*
-
----
-
-## Business Value
-
-Deploying AEGON yields significant enterprise ROI:
-- **Reduced Downtime:** Predictive alerts catch failures before they cascade.
-- **Lower Maintenance Costs:** Eliminates unnecessary scheduled maintenance.
-- **Optimized Capital Allocation:** Data-driven repair vs. replace decisions.
-- **Operational Resilience:** Real-time visibility prevents localized issues from becoming systemic failures.
-
----
-
-## Quick Start (Evaluation Mode)
-
-Experience the platform locally in minutes.
-
-### Prerequisites
-- Node.js v20+
+### 1. Prerequisites
 - Python 3.12+
-- PostgreSQL 15+ (SQLite is used by default for zero-config evaluation)
+- Node.js 20+
+- PostgreSQL database (Supabase recommended)
+- Redis and RabbitMQ
 
-### 1. Backend API
+### 2. Environment Configuration
+Clone the repository and configure your environments. Never commit credentials to source control.
+
 ```bash
+# Backend Configuration
 cd backend
-python -m venv venv
-# Windows: venv\Scripts\activate | macOS/Linux: source venv/bin/activate
-pip install -r requirements.txt
-alembic upgrade head
-uvicorn app.main:app --reload --port 8000
-```
-*(Runs on http://127.0.0.1:8000)*
+cp .env.example .env
+# Edit .env with your DATABASE_URL and SUPABASE variables
 
-### 2. Frontend Application
+# Frontend Configuration
+cd ../frontend
+cp .env.example .env
+# Edit .env with your backend API URL
+```
+
+### 3. Local Development
+
+Start the infrastructure stack and run the application services:
+
 ```bash
+# Initialize database schema
+cd backend
+alembic upgrade head
+
+# Start FastAPI server
+uvicorn app.main:app --reload --port 8000
+
+# Start React frontend in a new terminal
 cd frontend
 npm install
 npm run dev
 ```
-*(Runs on http://127.0.0.1:5173)*
-
-No login required. The application will open directly to the Executive Dashboard as the Enterprise Evaluation User.
 
 ---
 
-## Future Vision & Roadmap
+## Documentation
 
-- **IoT Telemetry Streaming:** Integration with Apache Kafka for real-time edge sensor ingestion.
-- **Generative AI & RAG:** Integrating Large Language Models with the corporate knowledge base (manuals, SOPs) for instant troubleshooting.
-- **Graph Intelligence:** Mapping complex dependencies between assets, parts, and financial impact.
-- **Autonomous Execution:** Shifting from human-in-the-loop to human-on-the-loop for routine procurement and scheduling.
+Detailed engineering documentation is available in the `docs/` directory:
+- [Architecture & System Design](docs/Architecture.md)
+- [Backend Services & Repositories](docs/Backend.md)
+- [Frontend Component Standards](docs/Frontend.md)
+- [Security Model](docs/Security.md)
+- [Vision Intelligence Pipeline](docs/VisionIntelligence.md)
 
 ---
+
+## Contributing
+
+We welcome contributions from the engineering community. Please review our [Contributing Guidelines](CONTRIBUTING.md) and [Code of Conduct](CODE_OF_CONDUCT.md) before submitting pull requests. All code must adhere to our strict architectural principles and pass all automated tests.
+
+## Security
+
+If you discover a security vulnerability within AEGON, please consult our [Security Policy](SECURITY.md) for responsible disclosure instructions.
 
 ## License
 
-This software is released as an Enterprise Evaluation Portfolio piece. See [LICENSE](LICENSE) for details.
-
-<p align="center">
-  <em>Designed for decision intelligence. Built for the enterprise.</em>
-</p>
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.

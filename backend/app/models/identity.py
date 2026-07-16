@@ -48,15 +48,16 @@ class RolePermission(AuditableBase):
 class User(AuditableBase):
     """
     Enterprise user representation. Supports RBAC.
-    Identity is managed by Clerk — clerk_user_id is the primary link.
+    Identity is managed by Supabase Auth — supabase_user_id is the primary link
+    to the `auth.users` table (the `sub` claim from Supabase JWTs).
     """
     __tablename__ = "users"
 
-    # Clerk identity — the `sub` claim from Clerk JWTs
-    clerk_user_id: Mapped[Optional[str]] = mapped_column(String(255), unique=True, index=True, nullable=True)
+    # Supabase Auth identity — the `sub` claim from Supabase JWTs
+    supabase_user_id: Mapped[Optional[str]] = mapped_column(String(255), unique=True, index=True, nullable=True)
 
     email: Mapped[str] = mapped_column(String(255), unique=True, index=True, nullable=False)
-    # nullable — Clerk manages passwords; kept for schema compatibility
+    # nullable — Supabase manages passwords; kept for schema compatibility
     hashed_password: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
     first_name: Mapped[str] = mapped_column(String(100), nullable=False, default="")
     last_name: Mapped[str] = mapped_column(String(100), nullable=False, default="")
