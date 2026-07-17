@@ -15,6 +15,16 @@ class Settings(BaseSettings):
         "http://localhost:3001",
         "http://localhost:8080",
     ]
+    # Allow passing additional CORS origins dynamically in production
+    FRONTEND_URLS: str = ""
+
+    @computed_field
+    @property
+    def cors_origins(self) -> List[str]:
+        origins = [str(origin).rstrip("/") for origin in self.BACKEND_CORS_ORIGINS]
+        if self.FRONTEND_URLS:
+            origins.extend([url.strip().rstrip("/") for url in self.FRONTEND_URLS.split(",") if url.strip()])
+        return list(set(origins))
 
     # SUPABASE
     SUPABASE_URL: str

@@ -1,0 +1,23 @@
+# ============================================================
+# AEGON - DEV Requirements (install alongside requirements.txt)
+# ============================================================
+-r requirements.txt
+
+# --- Testing ---
+pytest>=8.0.0
+pytest-asyncio>=0.23.0
+httpx>=0.28.1
+
+# --- Dev Fixtures ---
+Faker>=30.0.0
+factory_boy>=3.3.0
+
+# --- Code Quality ---
+black>=24.0.0
+ruff>=0.4.0
+mypy>=1.8.0
+types-python-dateutil
+
+# --- Debug ---
+debugpy>=1.8.0
+watchdog>=4.0.0

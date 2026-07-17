@@ -1,0 +1,8 @@
+# ============================================================
+# AEGON - Windows-only packages
+# Install on Windows only: pip install -r requirements-windows.txt
+# DO NOT include this in Render/Docker/Linux builds
+# ============================================================
+pywin32==306 ; platform_system == "Windows"
+pywinpty==2.0.13 ; platform_system == "Windows"
+colorama>=0.4.6 ; platform_system == "Windows"
