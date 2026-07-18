@@ -16,10 +16,16 @@ async def health_check() -> Dict[str, Any]:
 async def status_check() -> Dict[str, Any]:
     return {"status": "OK", "message": "All systems operational."}
 
+from app.core.database import AsyncSessionLocal
+
 @router.get("/debug/database")
-async def debug_database(session: AsyncSession = Depends(get_db)) -> Dict[str, Any]:
+async def debug_database() -> Dict[str, Any]:
+    if AsyncSessionLocal is None:
+        return {"status": "unavailable", "message": "Database is not configured (missing environment variables)."}
+        
     try:
-        await session.execute(text("SELECT 1"))
+        async with AsyncSessionLocal() as session:
+            await session.execute(text("SELECT 1"))
         return {"status": "connected", "latency_ms": 0} # simplified latency
     except Exception as e:
         return {"status": "disconnected", "error": str(e)}

@@ -46,6 +46,8 @@ class SupabaseService:
 
     def _get_client(self) -> Client:
         if self._client is None:
+            if not settings.SUPABASE_URL or not settings.SUPABASE_SECRET_KEY:
+                raise RuntimeError("Supabase is not configured. Missing SUPABASE_URL or SUPABASE_SECRET_KEY.")
             self._client = create_client(
                 supabase_url=settings.SUPABASE_URL,
                 supabase_key=settings.SUPABASE_SECRET_KEY,

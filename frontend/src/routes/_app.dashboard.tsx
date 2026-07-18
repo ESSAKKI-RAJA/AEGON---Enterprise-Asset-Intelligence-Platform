@@ -28,8 +28,6 @@ import { motion } from "framer-motion";
 import { PageLayout, PageHeader, SectionHeader } from "@/components/layout/PageLayout";
 import { MetricCard } from "@/components/dashboard/MetricCard";
 import { AIInsightCard } from "@/components/copilot/AIInsightCard";
-import { DiagnosticPanel } from "@/components/debug/DiagnosticPanel";
-
 export const Route = createFileRoute("/_app/dashboard")({
   component: DashboardPage,
 });
@@ -267,7 +265,6 @@ function DashboardPage() {
           </div>
         </div>
       </motion.div>
-      <DiagnosticPanel />
     </PageLayout>
   );
 }

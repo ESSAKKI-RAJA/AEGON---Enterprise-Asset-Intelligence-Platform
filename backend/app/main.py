@@ -1,3 +1,4 @@
+import logging
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 
@@ -6,9 +7,12 @@ from app.core.logging import setup_logging
 from app.core.middleware import setup_middlewares
 from app.core.container import Container
 from app.api.v1 import (
-    auth, assets, maintenance, inventory, finance, procurement, analytics, ai, realtime, settings as settings_api, search, vision
+    auth, assets, maintenance, inventory, finance, procurement, analytics, ai, realtime, settings as settings_api, search, vision, health
 )
 from app.core.exceptions import AegonException, aegon_exception_handler, global_exception_handler
+from app.core.database import init_db
+
+logger = logging.getLogger(__name__)
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -16,11 +20,12 @@ async def lifespan(app: FastAPI):
     setup_logging()
     print("STEP 2: Logging setup complete")
     
+    # Initialize Database Lazily
+    init_db()
     if not settings.DATABASE_URL:
-        raise ValueError("DATABASE_URL environment variable is missing. Cannot start application.")
-        
-    if not settings.DATABASE_URL.startswith("postgresql+asyncpg://"):
-        raise ValueError("DATABASE_URL must use the asyncpg driver (e.g., postgresql+asyncpg://...)")
+        logger.warning("DATABASE_URL environment variable is missing. Operating in degraded mode.")
+    elif not settings.DATABASE_URL.startswith("postgresql+asyncpg://"):
+        logger.warning("DATABASE_URL must use the asyncpg driver (e.g., postgresql+asyncpg://...). Connection might fail.")
     
     print("STEP 3: Database configuration validated")
     
@@ -59,41 +64,3 @@ app.include_router(settings_api.router, prefix=f"{settings.API_V1_STR}/settings"
 app.include_router(search.router, prefix=f"{settings.API_V1_STR}/search", tags=["search"])
 app.include_router(vision.router, prefix=f"{settings.API_V1_STR}/vision", tags=["vision-intelligence"])
 app.include_router(health.router, tags=["health"])
-
-from app.core.database import AsyncSessionLocal
-from app.core.cache import get_cache
-from sqlalchemy import text
-
-@app.get("/health", tags=["health"])
-async def health_check():
-    """Basic health check for load balancers."""
-    return {"status": "ok", "service": "AEGON Enterprise API"}
-
-@app.get("/status", tags=["health"])
-async def detailed_status():
-    """Detailed health status including Database and Cache."""
-    status = {"service": "AEGON Enterprise API", "status": "ok", "components": {}}
-    
-    # Check Database
-    try:
-        async with AsyncSessionLocal() as session:
-            await session.execute(text("SELECT 1"))
-        status["components"]["database"] = "ok"
-    except Exception as e:
-        status["components"]["database"] = f"error: {str(e)}"
-        status["status"] = "degraded"
-        
-    # Check Redis Cache
-    try:
-        cache = await get_cache()
-        await cache.ping()
-        status["components"]["redis"] = "ok"
-    except Exception as e:
-        status["components"]["redis"] = f"error: {str(e)}"
-        status["status"] = "degraded"
-        
-    return status
-
-@app.get("/version", tags=["health"])
-async def get_version():
-    return {"version": settings.VERSION}

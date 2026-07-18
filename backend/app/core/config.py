@@ -27,12 +27,12 @@ class Settings(BaseSettings):
         return list(set(origins))
 
     # SUPABASE
-    SUPABASE_URL: str
-    SUPABASE_SECRET_KEY: str
-    SUPABASE_JWKS_URL: str
+    SUPABASE_URL: str | None = None
+    SUPABASE_SECRET_KEY: str | None = None
+    SUPABASE_JWKS_URL: str | None = None
 
     # DATABASE
-    DATABASE_URL: str
+    DATABASE_URL: str | None = None
 
     # REDIS
     REDIS_HOST: str = "localhost"
