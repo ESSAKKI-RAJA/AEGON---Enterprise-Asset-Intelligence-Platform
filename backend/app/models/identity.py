@@ -1,7 +1,7 @@
 import uuid
 from datetime import datetime
-from typing import List, Optional
-from sqlalchemy import String, Boolean, ForeignKey, DateTime, Text
+from typing import Optional
+from sqlalchemy import String, Boolean, ForeignKey, DateTime, Text, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import AuditableBase
@@ -14,11 +14,11 @@ class Role(AuditableBase):
     """
     __tablename__ = "roles"
 
-    name: Mapped[UserRole] = mapped_column(String(50), unique=True, index=True, nullable=False)
+    name: Mapped[UserRole] = mapped_column(Enum(UserRole), unique=True, index=True, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
-    users: Mapped[List["User"]] = relationship("User", back_populates="role")
-    role_permissions: Mapped[List["RolePermission"]] = relationship("RolePermission", back_populates="role", cascade="all, delete-orphan")
+    users: Mapped[list["User"]] = relationship("User", back_populates="role")
+    role_permissions: Mapped[list["RolePermission"]] = relationship("RolePermission", back_populates="role", cascade="all, delete-orphan")
 
 class Permission(AuditableBase):
     """
@@ -28,10 +28,10 @@ class Permission(AuditableBase):
     __tablename__ = "permissions"
 
     name: Mapped[str] = mapped_column(String(100), unique=True, index=True, nullable=False)
-    type: Mapped[PermissionType] = mapped_column(String(50), default=PermissionType.READ, nullable=False)
+    type: Mapped[PermissionType] = mapped_column(Enum(PermissionType), default=PermissionType.READ, nullable=False)
     description: Mapped[Optional[str]] = mapped_column(String(255), nullable=True)
 
-    role_permissions: Mapped[List["RolePermission"]] = relationship("RolePermission", back_populates="permission", cascade="all, delete-orphan")
+    role_permissions: Mapped[list["RolePermission"]] = relationship("RolePermission", back_populates="permission", cascade="all, delete-orphan")
 
 class RolePermission(AuditableBase):
     """
@@ -68,9 +68,9 @@ class User(AuditableBase):
 
     role: Mapped[Optional["Role"]] = relationship("Role", back_populates="users")
     department: Mapped[Optional["Department"]] = relationship("Department", back_populates="users")
-    sessions: Mapped[List["UserSession"]] = relationship("UserSession", back_populates="user", cascade="all, delete-orphan")
-    login_histories: Mapped[List["LoginHistory"]] = relationship("LoginHistory", back_populates="user", cascade="all, delete-orphan")
-    audit_logs: Mapped[List["AuditLog"]] = relationship("AuditLog", back_populates="user", cascade="all, delete-orphan")
+    sessions: Mapped[list["UserSession"]] = relationship("UserSession", back_populates="user", cascade="all, delete-orphan")
+    login_histories: Mapped[list["LoginHistory"]] = relationship("LoginHistory", back_populates="user", cascade="all, delete-orphan")
+    audit_logs: Mapped[list["AuditLog"]] = relationship("AuditLog", back_populates="user", cascade="all, delete-orphan")
 
     @property
     def full_name(self) -> str:
