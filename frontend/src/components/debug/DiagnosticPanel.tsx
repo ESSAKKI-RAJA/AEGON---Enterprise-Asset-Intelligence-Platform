@@ -10,7 +10,7 @@ export function DiagnosticPanel() {
     database: 'Loading...',
     cache: 'Loading...',
     routes: 0,
-    apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1',
+    apiUrl: import.meta.env.VITE_API_URL || 'https://aegon-enterprise-asset-intelligence.onrender.com',
   });
 
   const fetchDiagnostics = async () => {
@@ -27,7 +27,7 @@ export function DiagnosticPanel() {
         database: dbRes.status || 'Unknown',
         cache: cacheRes.status || 'Unknown',
         routes: routesRes.routes_count || 0,
-        apiUrl: import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1',
+        apiUrl: import.meta.env.VITE_API_URL || 'https://aegon-enterprise-asset-intelligence.onrender.com',
       });
     } catch (error) {
       console.error("Failed to fetch diagnostics", error);
