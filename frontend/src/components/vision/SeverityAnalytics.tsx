@@ -42,7 +42,11 @@ export function SeverityAnalytics({ findings, digitalTwin }: SeverityAnalyticsPr
     });
     return Object.entries(counts)
       .filter(([, count]) => count > 0)
-      .map(([name, value]) => ({ name: name.toUpperCase(), value, fill: SEVERITY_COLORS[name as keyof typeof SEVERITY_COLORS] }));
+      .map(([name, value]) => ({
+        name: name.toUpperCase(),
+        value,
+        fill: SEVERITY_COLORS[name as keyof typeof SEVERITY_COLORS],
+      }));
   }, [findings]);
 
   // Bar chart data (defects by type)
@@ -90,7 +94,12 @@ export function SeverityAnalytics({ findings, digitalTwin }: SeverityAnalyticsPr
                   ))}
                 </Pie>
                 <RechartsTooltip
-                  contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #1e293b", fontSize: "12px", fontFamily: "monospace" }}
+                  contentStyle={{
+                    backgroundColor: "#0f172a",
+                    border: "1px solid #1e293b",
+                    fontSize: "12px",
+                    fontFamily: "monospace",
+                  }}
                   itemStyle={{ color: "#f8fafc" }}
                 />
               </PieChart>
@@ -113,11 +122,24 @@ export function SeverityAnalytics({ findings, digitalTwin }: SeverityAnalyticsPr
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={defectTypeData} layout="vertical" margin={{ left: 20 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" horizontal={false} />
-                <XAxis type="number" tick={{ fill: "#64748b", fontSize: 10, fontFamily: "monospace" }} />
-                <YAxis dataKey="name" type="category" tick={{ fill: "#94a3b8", fontSize: 10, fontFamily: "monospace" }} width={80} />
+                <XAxis
+                  type="number"
+                  tick={{ fill: "#64748b", fontSize: 10, fontFamily: "monospace" }}
+                />
+                <YAxis
+                  dataKey="name"
+                  type="category"
+                  tick={{ fill: "#94a3b8", fontSize: 10, fontFamily: "monospace" }}
+                  width={80}
+                />
                 <RechartsTooltip
                   cursor={{ fill: "#1e293b" }}
-                  contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #1e293b", fontSize: "12px", fontFamily: "monospace" }}
+                  contentStyle={{
+                    backgroundColor: "#0f172a",
+                    border: "1px solid #1e293b",
+                    fontSize: "12px",
+                    fontFamily: "monospace",
+                  }}
                 />
                 <Bar dataKey="count" fill="#6366f1" radius={[0, 4, 4, 0]} />
               </BarChart>
@@ -145,12 +167,29 @@ export function SeverityAnalytics({ findings, digitalTwin }: SeverityAnalyticsPr
                 </linearGradient>
               </defs>
               <CartesianGrid strokeDasharray="3 3" stroke="#1e293b" vertical={false} />
-              <XAxis dataKey="name" tick={{ fill: "#64748b", fontSize: 10, fontFamily: "monospace" }} />
-              <YAxis domain={[0, 100]} tick={{ fill: "#64748b", fontSize: 10, fontFamily: "monospace" }} />
-              <RechartsTooltip
-                contentStyle={{ backgroundColor: "#0f172a", border: "1px solid #1e293b", fontSize: "12px", fontFamily: "monospace" }}
+              <XAxis
+                dataKey="name"
+                tick={{ fill: "#64748b", fontSize: 10, fontFamily: "monospace" }}
               />
-              <Area type="monotone" dataKey="health" stroke="#10b981" fillOpacity={1} fill="url(#colorHealth)" />
+              <YAxis
+                domain={[0, 100]}
+                tick={{ fill: "#64748b", fontSize: 10, fontFamily: "monospace" }}
+              />
+              <RechartsTooltip
+                contentStyle={{
+                  backgroundColor: "#0f172a",
+                  border: "1px solid #1e293b",
+                  fontSize: "12px",
+                  fontFamily: "monospace",
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="health"
+                stroke="#10b981"
+                fillOpacity={1}
+                fill="url(#colorHealth)"
+              />
             </AreaChart>
           </ResponsiveContainer>
         </div>

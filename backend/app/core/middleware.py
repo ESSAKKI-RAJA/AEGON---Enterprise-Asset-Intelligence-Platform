@@ -4,7 +4,6 @@ from typing import Callable
 from fastapi import Request, Response, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
-from fastapi.middleware.trustedhost import TrustedHostMiddleware
 from starlette.middleware.base import BaseHTTPMiddleware
 import logging
 from app.core.config import settings

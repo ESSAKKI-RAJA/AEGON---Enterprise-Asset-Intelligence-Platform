@@ -1,6 +1,6 @@
-from typing import Optional, List, Any
+from typing import Optional, Any
 from uuid import UUID
-from sqlalchemy import select, and_, func
+from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.base import BaseRepository, translate_db_exception, Page, QuerySpecification, FilterSpec, FilterOperator, CacheHook, AuditHook
 from app.models.asset import Asset
@@ -33,7 +33,7 @@ class AssetRepository(BaseRepository[Asset]):
                 self.model_class.id == entity_id
             )
             if hasattr(self.model_class, 'is_deleted'):
-                stmt = stmt.where(self.model_class.is_deleted == False)
+                stmt = stmt.where(self.model_class.is_deleted .is_(False))
             result = await self.session.execute(stmt)
             return result.scalar_one_or_none()
         except Exception as e:
@@ -44,7 +44,7 @@ class AssetRepository(BaseRepository[Asset]):
         try:
             stmt = select(self.model_class).where(
                 self.model_class.barcode == barcode,
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             )
             result = await self.session.execute(stmt)
             return result.scalar_one_or_none()
@@ -112,13 +112,13 @@ class AssetRepository(BaseRepository[Asset]):
             )
             
             if hasattr(self.model_class, 'is_deleted'):
-                query = query.where(self.model_class.is_deleted == False)
+                query = query.where(self.model_class.is_deleted .is_(False))
             
             query = spec.apply_to_query(query, self.model_class)
             
             count_query = select(func.count()).select_from(self.model_class)
             if hasattr(self.model_class, 'is_deleted'):
-                count_query = count_query.where(self.model_class.is_deleted == False)
+                count_query = count_query.where(self.model_class.is_deleted .is_(False))
             for filter_spec in spec.filters:
                 count_query = count_query.where(filter_spec.to_sqlalchemy(self.model_class))
             if spec.search_query and spec.search_fields:
@@ -150,10 +150,10 @@ class AssetRepository(BaseRepository[Asset]):
     async def get_summary_stats(self) -> dict:
         """Get aggregated asset statistics."""
         try:
-            res_total = await self.session.execute(select(func.count(Asset.id)).where(Asset.is_deleted == False))
-            res_val = await self.session.execute(select(func.sum(Asset.current_value)).where(Asset.is_deleted == False))
-            res_health = await self.session.execute(select(func.avg(Asset.health_score)).where(Asset.is_deleted == False))
-            res_crit = await self.session.execute(select(func.count(Asset.id)).where(Asset.health_status == "critical", Asset.is_deleted == False))
+            res_total = await self.session.execute(select(func.count(Asset.id)).where(Asset.is_deleted .is_(False)))
+            res_val = await self.session.execute(select(func.sum(Asset.current_value)).where(Asset.is_deleted .is_(False)))
+            res_health = await self.session.execute(select(func.avg(Asset.health_score)).where(Asset.is_deleted .is_(False)))
+            res_crit = await self.session.execute(select(func.count(Asset.id)).where(Asset.health_status == "critical", Asset.is_deleted .is_(False)))
             
             return {
                 "total_assets": res_total.scalar() or 0,
@@ -171,7 +171,7 @@ class AssetRepository(BaseRepository[Asset]):
                 Asset.department_id,
                 func.avg(Asset.health_score).label("avg_health"),
                 func.count(Asset.id).label("asset_count"),
-            ).where(Asset.is_deleted == False).group_by(Asset.department_id).order_by(func.avg(Asset.health_score).desc())
+            ).where(Asset.is_deleted .is_(False)).group_by(Asset.department_id).order_by(func.avg(Asset.health_score).desc())
             
             result = await self.session.execute(stmt)
             rows = result.all()

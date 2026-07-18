@@ -1,10 +1,9 @@
 from typing import Optional, List
 from uuid import UUID
-from sqlalchemy import select, and_
+from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.repositories.base import BaseRepository, translate_db_exception, Page, QuerySpecification, FilterSpec, FilterOperator, CacheHook, AuditHook
+from app.repositories.base import BaseRepository, translate_db_exception, CacheHook, AuditHook
 from app.models.inventory import InventoryItem
-from app.models.enums import InventoryStatus
 
 
 class InventoryRepository(BaseRepository[InventoryItem]):
@@ -28,7 +27,7 @@ class InventoryRepository(BaseRepository[InventoryItem]):
         try:
             stmt = select(self.model_class).where(
                 self.model_class.sku == sku,
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             )
             result = await self.session.execute(stmt)
             return result.scalar_one_or_none()
@@ -43,7 +42,7 @@ class InventoryRepository(BaseRepository[InventoryItem]):
         try:
             stmt = select(self.model_class).where(
                 self.model_class.quantity <= self.model_class.reorder_level,
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             )
             if warehouse_id:
                 stmt = stmt.where(self.model_class.warehouse_id == warehouse_id)
@@ -62,7 +61,7 @@ class InventoryRepository(BaseRepository[InventoryItem]):
         Returns classification segments A (top 80% value), B (next 15%), and C (remaining 5%).
         """
         try:
-            stmt = select(self.model_class).where(self.model_class.is_deleted == False)
+            stmt = select(self.model_class).where(self.model_class.is_deleted .is_(False))
             if warehouse_id:
                 stmt = stmt.where(self.model_class.warehouse_id == warehouse_id)
                 
@@ -119,7 +118,7 @@ class InventoryRepository(BaseRepository[InventoryItem]):
         from sqlalchemy import select, func
         try:
             stmt = select(func.count(self.model_class.id)).where(
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             )
             res = await self.session.execute(stmt)
             return res.scalar() or 0

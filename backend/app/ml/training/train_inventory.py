@@ -1,8 +1,6 @@
-import pandas as pd
 from prophet import Prophet
 import os
 import joblib
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.ml.feature_engineering.inventory_forecast import build_inventory_history_features
 from app.core.database import AsyncSessionLocal

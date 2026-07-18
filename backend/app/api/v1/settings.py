@@ -1,13 +1,11 @@
-from fastapi import APIRouter, Depends, status, Query
-from typing import Any, List
+from fastapi import APIRouter, Depends, Query
+from typing import Any
 from dependency_injector.wiring import Provide, inject
 
 from app.services.user_service import UserService
 from app.core.container import Container
-from app.api.deps import get_current_user
 from app.core.authorization import require_permission, require_role
 from app.models.enums import UserRole
-from app.models.identity import User
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.database import get_db
 

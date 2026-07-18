@@ -1,8 +1,7 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
+from typing import Optional
 from datetime import datetime, timedelta
 import uuid
-from typing import Dict, Any, Optional
+from typing import Dict, Any
 
 from app.models.asset import Asset
 from app.repositories.asset import AssetRepository
@@ -30,9 +29,12 @@ class EvaluateWarrantyRule(BusinessRule):
         expiry = asset.warranty_expiry.replace(tzinfo=None) if asset.warranty_expiry.tzinfo else asset.warranty_expiry
         days_remaining = (expiry - datetime.utcnow()).days
         
-        if days_remaining < 0: status = "expired"
-        elif days_remaining < 60: status = "expiring_soon"
-        else: status = "active"
+        if days_remaining < 0:
+            status = "expired"
+        elif days_remaining < 60:
+            status = "expiring_soon"
+        else:
+            status = "active"
         
         return {"status": status, "days_remaining": days_remaining}
 
@@ -124,7 +126,7 @@ class RegisterAssetPersistenceStep(WorkflowStep):
 
 # --- Service ---
 class AssetService(BaseService):
-    def __init__(self, uow: UnitOfWork, event_dispatcher: EventDispatcher = None):
+    def __init__(self, uow: UnitOfWork, event_dispatcher: Optional[EventDispatcher] = None):
         super().__init__(uow, event_dispatcher)
         self.rule_engine = BusinessRuleEngine()
 

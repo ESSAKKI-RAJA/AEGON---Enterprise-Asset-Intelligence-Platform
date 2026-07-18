@@ -1,3 +1,4 @@
+from __future__ import annotations
 from .base import Base, AuditableBase
 from .enums import (
     AssetStatus, MaintenanceStatus, WorkOrderStatus, ApprovalStatus,

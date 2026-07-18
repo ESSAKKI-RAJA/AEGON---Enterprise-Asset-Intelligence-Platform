@@ -3,23 +3,11 @@
  * Mirrors the backend Pydantic schemas for strict end-to-end typing.
  */
 
-export type VisionViewType =
-  | "top"
-  | "bottom"
-  | "front"
-  | "rear"
-  | "left"
-  | "right"
-  | "360";
+export type VisionViewType = "top" | "bottom" | "front" | "rear" | "left" | "right" | "360";
 
 export type DefectSeverity = "critical" | "high" | "medium" | "low" | "none";
 
-export type InspectionStatus =
-  | "idle"
-  | "uploading"
-  | "analyzing"
-  | "complete"
-  | "failed";
+export type InspectionStatus = "idle" | "uploading" | "analyzing" | "complete" | "failed";
 
 export type MaintenancePriority =
   | "immediate"

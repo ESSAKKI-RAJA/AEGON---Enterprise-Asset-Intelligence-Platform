@@ -3,7 +3,14 @@
  */
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronRight, AlertTriangle, AlertOctagon, Info, CheckCircle2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  AlertTriangle,
+  AlertOctagon,
+  Info,
+  CheckCircle2,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { DefectFinding, DefectSeverity } from "@/types/vision";
 
@@ -127,9 +134,7 @@ function FindingCard({
           </div>
           {/* Confidence bar */}
           <div className="flex items-center gap-2">
-            <span className="text-[9px] font-mono text-slate-500 shrink-0">
-              Confidence
-            </span>
+            <span className="text-[9px] font-mono text-slate-500 shrink-0">Confidence</span>
             <div className="flex-1">
               <ConfidenceBar value={finding.confidence} barClass={cfg.bar} />
             </div>
@@ -155,9 +160,7 @@ function FindingCard({
             className="overflow-hidden border-t border-slate-800/60"
           >
             <div className="p-3 space-y-2 bg-slate-950/50">
-              <p className="text-[11px] text-slate-400 leading-relaxed">
-                {finding.description}
-              </p>
+              <p className="text-[11px] text-slate-400 leading-relaxed">{finding.description}</p>
               <div className="flex items-start gap-1.5 mt-2">
                 <div className="shrink-0 mt-0.5 h-3 w-3 rounded-full border border-indigo-500/50 flex items-center justify-center">
                   <div className="h-1 w-1 rounded-full bg-indigo-400" />
@@ -175,25 +178,33 @@ function FindingCard({
               {(finding.estimated_repair_cost > 0 || finding.estimated_repair_time_mins > 0) && (
                 <div className="flex items-center gap-4 mt-2 pt-2 border-t border-slate-800/50">
                   {finding.estimated_repair_cost > 0 && (
-                    <span className="text-[9px] font-mono text-amber-500/80">Est. Cost: ${finding.estimated_repair_cost.toFixed(2)}</span>
+                    <span className="text-[9px] font-mono text-amber-500/80">
+                      Est. Cost: ${finding.estimated_repair_cost.toFixed(2)}
+                    </span>
                   )}
                   {finding.estimated_repair_time_mins > 0 && (
-                    <span className="text-[9px] font-mono text-blue-400/80">Est. Time: {finding.estimated_repair_time_mins} mins</span>
+                    <span className="text-[9px] font-mono text-blue-400/80">
+                      Est. Time: {finding.estimated_repair_time_mins} mins
+                    </span>
                   )}
                 </div>
               )}
               {/* Action buttons */}
-              {(finding.severity === "critical" || finding.severity === "high") && onCreateTicket && (
-                <div className="mt-3">
-                  <button
-                    onClick={(e) => { e.stopPropagation(); onCreateTicket(finding); }}
-                    disabled={isCreatingTicket}
-                    className="w-full py-1.5 px-3 rounded bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-indigo-400 text-[10px] font-mono font-bold transition-colors disabled:opacity-50"
-                  >
-                    CREATE MAINTENANCE TICKET
-                  </button>
-                </div>
-              )}
+              {(finding.severity === "critical" || finding.severity === "high") &&
+                onCreateTicket && (
+                  <div className="mt-3">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onCreateTicket(finding);
+                      }}
+                      disabled={isCreatingTicket}
+                      className="w-full py-1.5 px-3 rounded bg-indigo-600/20 hover:bg-indigo-600/30 border border-indigo-500/30 text-indigo-400 text-[10px] font-mono font-bold transition-colors disabled:opacity-50"
+                    >
+                      CREATE MAINTENANCE TICKET
+                    </button>
+                  </div>
+                )}
             </div>
           </motion.div>
         )}
@@ -202,7 +213,12 @@ function FindingCard({
   );
 }
 
-export function FindingsPanel({ findings, viewLabel, onCreateTicket, isCreatingTicket }: FindingsPanelProps) {
+export function FindingsPanel({
+  findings,
+  viewLabel,
+  onCreateTicket,
+  isCreatingTicket,
+}: FindingsPanelProps) {
   const [filter, setFilter] = useState<DefectSeverity | "all">("all");
 
   const severityOrder: DefectSeverity[] = ["critical", "high", "medium", "low", "none"];
@@ -257,7 +273,9 @@ export function FindingsPanel({ findings, viewLabel, onCreateTicket, isCreatingT
               onClick={() => setFilter(sev)}
               className={cn(
                 "px-2 py-0.5 rounded text-[9px] font-mono font-bold border transition-colors",
-                filter === sev ? `${cfg.bg} ${cfg.border} ${cfg.color}` : "border-slate-700 text-slate-500 hover:text-slate-300",
+                filter === sev
+                  ? `${cfg.bg} ${cfg.border} ${cfg.color}`
+                  : "border-slate-700 text-slate-500 hover:text-slate-300",
               )}
             >
               {cfg.label} ({cnt})

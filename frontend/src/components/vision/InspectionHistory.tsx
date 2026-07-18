@@ -12,16 +12,33 @@ interface InspectionHistoryProps {
   isLoading?: boolean;
 }
 
-const PRIORITY_CONFIG: Record<
-  MaintenancePriority,
-  { label: string; color: string; bg: string }
-> = {
+const PRIORITY_CONFIG: Record<MaintenancePriority, { label: string; color: string; bg: string }> = {
   immediate: { label: "IMMEDIATE", color: "text-red-400", bg: "bg-red-950/30 border-red-500/30" },
-  within_7_days: { label: "7 DAYS", color: "text-orange-400", bg: "bg-orange-950/20 border-orange-500/30" },
-  within_30_days: { label: "30 DAYS", color: "text-amber-400", bg: "bg-amber-950/20 border-amber-500/30" },
-  within_90_days: { label: "90 DAYS", color: "text-blue-400", bg: "bg-blue-950/20 border-blue-500/30" },
-  scheduled: { label: "SCHEDULED", color: "text-teal-400", bg: "bg-teal-950/20 border-teal-500/30" },
-  none_required: { label: "OPTIMAL", color: "text-emerald-400", bg: "bg-emerald-950/20 border-emerald-500/30" },
+  within_7_days: {
+    label: "7 DAYS",
+    color: "text-orange-400",
+    bg: "bg-orange-950/20 border-orange-500/30",
+  },
+  within_30_days: {
+    label: "30 DAYS",
+    color: "text-amber-400",
+    bg: "bg-amber-950/20 border-amber-500/30",
+  },
+  within_90_days: {
+    label: "90 DAYS",
+    color: "text-blue-400",
+    bg: "bg-blue-950/20 border-blue-500/30",
+  },
+  scheduled: {
+    label: "SCHEDULED",
+    color: "text-teal-400",
+    bg: "bg-teal-950/20 border-teal-500/30",
+  },
+  none_required: {
+    label: "OPTIMAL",
+    color: "text-emerald-400",
+    bg: "bg-emerald-950/20 border-emerald-500/30",
+  },
 };
 
 function SkeletonRow() {
@@ -45,8 +62,7 @@ export function InspectionHistory({ items, isLoading }: InspectionHistoryProps) 
       item.session_id.toLowerCase().includes(search.toLowerCase()) ||
       item.operator.toLowerCase().includes(search.toLowerCase());
 
-    const matchPriority =
-      filterPriority === "all" || item.maintenance_priority === filterPriority;
+    const matchPriority = filterPriority === "all" || item.maintenance_priority === filterPriority;
 
     return matchSearch && matchPriority;
   });
@@ -84,7 +100,10 @@ export function InspectionHistory({ items, isLoading }: InspectionHistoryProps) 
         <div className="grid grid-cols-7 gap-3 px-4 py-2.5 bg-slate-950/80 border-b border-slate-800">
           {["Inspection ID", "Asset", "Operator", "Views", "Defects", "Health", "Priority"].map(
             (col) => (
-              <span key={col} className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest">
+              <span
+                key={col}
+                className="text-[9px] font-mono font-bold text-slate-500 uppercase tracking-widest"
+              >
                 {col}
               </span>
             ),
@@ -136,7 +155,12 @@ export function InspectionHistory({ items, isLoading }: InspectionHistoryProps) 
                   ) : (
                     <CheckCircle2 className="h-3 w-3 text-emerald-400 shrink-0" />
                   )}
-                  <span className={cn("text-[10px] font-mono", item.critical_defects > 0 ? "text-red-400" : "text-slate-300")}>
+                  <span
+                    className={cn(
+                      "text-[10px] font-mono",
+                      item.critical_defects > 0 ? "text-red-400" : "text-slate-300",
+                    )}
+                  >
                     {item.total_defects}
                   </span>
                 </div>
@@ -144,7 +168,11 @@ export function InspectionHistory({ items, isLoading }: InspectionHistoryProps) 
                 <span
                   className={cn(
                     "text-[10px] font-mono font-bold",
-                    item.health_score >= 75 ? "text-emerald-400" : item.health_score >= 50 ? "text-amber-400" : "text-red-400",
+                    item.health_score >= 75
+                      ? "text-emerald-400"
+                      : item.health_score >= 50
+                        ? "text-amber-400"
+                        : "text-red-400",
                   )}
                 >
                   {item.health_score.toFixed(0)}%

@@ -1,7 +1,6 @@
-from typing import Dict, Any, List
+from typing import List
 import numpy as np
 from app.core.events import EventDispatcher, DomainEvent
-import uuid
 
 class ModelDriftEvent(DomainEvent):
     def __init__(self, model_name: str, drift_score: float, **kwargs):

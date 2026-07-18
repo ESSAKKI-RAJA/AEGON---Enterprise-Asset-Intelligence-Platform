@@ -1,6 +1,6 @@
 import json
 from uuid import UUID
-from typing import Optional, Dict, Any
+from typing import Any
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.base import AuditHook, AuditLog as BaseAuditLog
 from app.models.identity import AuditLog as DBAuditLog

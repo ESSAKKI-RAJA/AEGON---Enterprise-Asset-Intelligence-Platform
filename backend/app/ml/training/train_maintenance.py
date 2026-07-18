@@ -4,12 +4,10 @@ from sklearn.ensemble import RandomForestRegressor, RandomForestClassifier
 import shap
 import os
 import joblib
-from sklearn.model_selection import train_test_split
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.models.asset import Asset
-from app.models.maintenance import WorkOrder
 from app.core.database import AsyncSessionLocal
 
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")

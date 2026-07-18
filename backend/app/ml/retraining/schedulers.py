@@ -1,4 +1,3 @@
-from typing import Any
 from app.ml.retraining.workflows import workflow_manager
 import logging
 

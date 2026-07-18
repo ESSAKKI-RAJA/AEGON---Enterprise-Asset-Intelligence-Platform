@@ -1,8 +1,9 @@
+from typing import Optional
 from typing import Dict, Any, List
 from sqlalchemy import select, func
 from app.services.base import BaseService
 from app.repositories.procurement import ProcurementRepository
-from app.models.procurement import PurchaseRequest, Invoice, PurchaseOrder
+from app.models.procurement import PurchaseOrder
 from app.models.enums import ApprovalStatus
 
 class ProcurementService(BaseService):

@@ -1,15 +1,13 @@
 import pandas as pd
 from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func
+from sqlalchemy import select
 from datetime import datetime, timezone
 import uuid
 import numpy as np
 
 from app.models.asset import Asset
-from app.models.maintenance import WorkOrder, MaintenanceRecord
-from app.models.enums import WorkOrderStatus
+from app.models.maintenance import MaintenanceRecord
 
-import uuid
 from typing import Optional
 
 async def build_asset_failure_features(session: AsyncSession, asset_id: Optional[uuid.UUID] = None) -> pd.DataFrame:

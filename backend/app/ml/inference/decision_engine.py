@@ -1,5 +1,5 @@
 import pandas as pd
-from typing import List, Dict, Any
+from typing import List
 from pydantic import BaseModel
 
 from app.ml.prediction.asset_failure_predict import predict_asset_failure

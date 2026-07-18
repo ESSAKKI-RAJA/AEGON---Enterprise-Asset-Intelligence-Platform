@@ -16,7 +16,6 @@ network calls, so reviewers can access the platform immediately.
 from __future__ import annotations
 from typing import Any
 import logging
-from app.core.config import settings
 
 logger = logging.getLogger(__name__)
 

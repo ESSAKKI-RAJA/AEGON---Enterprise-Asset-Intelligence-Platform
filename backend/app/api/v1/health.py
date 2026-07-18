@@ -1,8 +1,6 @@
-from fastapi import APIRouter, Depends, Request
+from fastapi import APIRouter, Request
 from typing import Dict, Any
 from sqlalchemy import text
-from app.core.database import get_db
-from sqlalchemy.ext.asyncio import AsyncSession
 from app.core.cache import CacheService
 import os
 

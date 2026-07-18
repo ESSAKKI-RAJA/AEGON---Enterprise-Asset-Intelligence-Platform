@@ -5,7 +5,6 @@ import os
 import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score
-from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.ml.feature_engineering.asset_failure import build_asset_failure_features
 from app.core.database import AsyncSessionLocal

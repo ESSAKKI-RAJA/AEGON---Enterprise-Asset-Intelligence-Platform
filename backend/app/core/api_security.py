@@ -1,5 +1,4 @@
 from fastapi import Request, HTTPException, status
-from typing import Optional
 import re
 import bleach
 

@@ -3,12 +3,8 @@ from prophet import Prophet
 import os
 import joblib
 import numpy as np
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select
 from datetime import datetime, timedelta
 
-from app.models.finance import Budget, Expense
-from app.core.database import AsyncSessionLocal
 
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")
 FINANCE_CAPEX_MODEL = os.path.join(MODEL_DIR, "finance_capex_prophet.pkl")

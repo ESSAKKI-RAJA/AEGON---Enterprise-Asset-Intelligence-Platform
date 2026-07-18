@@ -8,7 +8,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.models.asset import Vendor
-from app.models.procurement import PurchaseOrder
 from app.core.database import AsyncSessionLocal
 
 MODEL_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "models")

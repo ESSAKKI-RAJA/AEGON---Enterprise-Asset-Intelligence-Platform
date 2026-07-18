@@ -1,14 +1,11 @@
-from sqlalchemy.ext.asyncio import AsyncSession
-from sqlalchemy import select, func, extract
-from typing import Dict, Any, List
-from datetime import datetime, timedelta
+from typing import Optional
+from sqlalchemy import select, func
+from typing import Dict, Any
 
 from app.repositories.base import UnitOfWork
 from app.core.cache import CacheService
 from app.models.asset import Asset
-from app.models.maintenance import MaintenanceCost, WorkOrder
 from app.models.organization import Department
-from app.ai.llm_gateway import llm_gateway
 
 import logging
 from time import perf_counter
@@ -165,10 +162,10 @@ class AnalyticsService:
         async def _fetch():
             session = self.uow.session
             # Compute Average Asset Health
-            avg_health = await session.scalar(select(func.avg(Asset.health_score)).where(Asset.is_deleted == False)) or 100.0
+            avg_health = await session.scalar(select(func.avg(Asset.health_score)).where(Asset.is_deleted .is_(False))) or 100.0
             
             # Asset Health Distribution
-            health_res = await session.execute(select(Asset.health_score).where(Asset.is_deleted == False))
+            health_res = await session.execute(select(Asset.health_score).where(Asset.is_deleted .is_(False)))
             health_scores = [float(h) for h in health_res.scalars().all()]
             health_dist = [
                 {"name": "Excellent (90-100)", "value": len([x for x in health_scores if x >= 90]), "color": "#10b981"},
@@ -178,7 +175,6 @@ class AnalyticsService:
             ]
 
             # Department Performance
-            from app.models.organization import Department
             dept_res = await session.execute(
                 select(Department.name, func.avg(Asset.health_score), func.count(Asset.id))
                 .outerjoin(Asset, Asset.department_id == Department.id)
@@ -196,7 +192,7 @@ class AnalyticsService:
             from app.models.maintenance import MaintenanceRecord
             maint_res = await session.execute(
                 select(MaintenanceRecord.maintenance_date, MaintenanceRecord.downtime_hours, MaintenanceRecord.cost)
-                .where(MaintenanceRecord.is_deleted == False)
+                .where(MaintenanceRecord.is_deleted .is_(False))
                 .order_by(MaintenanceRecord.maintenance_date.desc())
                 .limit(500)
             )

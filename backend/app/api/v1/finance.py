@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, status
+from fastapi import APIRouter, Depends
 from typing import List, Any
 from dependency_injector.wiring import Provide, inject
 

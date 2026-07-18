@@ -38,11 +38,9 @@ export function useUploadView(onSuccess?: (data: UploadViewResponse) => void) {
         form.append("file", file);
       }
 
-      const response = await apiClient.post<any>(
-        `${BASE}/upload/${viewType}`,
-        form,
-        { headers: { "Content-Type": "multipart/form-data" } },
-      );
+      const response = await apiClient.post<any>(`${BASE}/upload/${viewType}`, form, {
+        headers: { "Content-Type": "multipart/form-data" },
+      });
       // apiClient interceptor unwraps { data: ... }
       return response as unknown as UploadViewResponse;
     },

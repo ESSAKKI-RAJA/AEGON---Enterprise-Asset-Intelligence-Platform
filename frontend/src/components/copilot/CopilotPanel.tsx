@@ -5,7 +5,8 @@ import { cn } from "@/lib/utils";
 import axios from "axios";
 import { motion, AnimatePresence } from "framer-motion";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://127.0.0.1:8000/api/v1");
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://127.0.0.1:8000/api/v1");
 
 interface Message {
   id: string;

@@ -1,3 +1,4 @@
+from __future__ import annotations
 import enum
 
 class AssetStatus(str, enum.Enum):

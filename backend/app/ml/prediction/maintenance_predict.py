@@ -2,7 +2,7 @@ import os
 import joblib
 import pandas as pd
 import numpy as np
-from typing import List, Dict
+from typing import List
 
 from app.ml.dto.ml_predictions import SHAPExplanation
 from pydantic import BaseModel

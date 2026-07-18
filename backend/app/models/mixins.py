@@ -1,7 +1,8 @@
+from __future__ import annotations
 import uuid
 from datetime import datetime
 from typing import Optional
-from sqlalchemy import DateTime, Boolean, Integer, Float, text, ForeignKey
+from sqlalchemy import DateTime, Boolean, Integer, Float, text
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column
 

@@ -1,6 +1,5 @@
 from typing import Dict, Any
 from app.ml.inference.services import PredictionService
-from app.ml.inference.explainability import ExplainabilityEngine
 
 def predict_health_score(features: Dict[str, Any]) -> float:
     svc = PredictionService()

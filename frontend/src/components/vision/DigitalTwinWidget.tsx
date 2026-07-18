@@ -2,7 +2,15 @@
  * DigitalTwinWidget — Live asset twin state panel updated per inspection.
  */
 import { motion } from "framer-motion";
-import { Activity, ThermometerSun, ShieldAlert, Wrench, CheckCircle2, Wind, RotateCcw } from "lucide-react";
+import {
+  Activity,
+  ThermometerSun,
+  ShieldAlert,
+  Wrench,
+  CheckCircle2,
+  Wind,
+  RotateCcw,
+} from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { DigitalTwinState, VisionViewType } from "@/types/vision";
 
@@ -23,8 +31,7 @@ function HealthRing({ score }: { score: number }) {
   const radius = 42;
   const circ = 2 * Math.PI * radius;
   const offset = circ - (circ * score) / 100;
-  const color =
-    score >= 75 ? "#10b981" : score >= 50 ? "#f59e0b" : "#ef4444";
+  const color = score >= 75 ? "#10b981" : score >= 50 ? "#f59e0b" : "#ef4444";
 
   return (
     <div className="relative flex items-center justify-center w-24 h-24">
@@ -71,9 +78,7 @@ function MetricRow({
         <Icon className="h-3.5 w-3.5" />
         <span className="text-[10px] font-mono uppercase tracking-wider">{label}</span>
       </div>
-      <span className={cn("text-[11px] font-mono font-semibold", valueClass)}>
-        {value}
-      </span>
+      <span className={cn("text-[11px] font-mono font-semibold", valueClass)}>{value}</span>
     </div>
   );
 }
@@ -106,9 +111,7 @@ export function DigitalTwinWidget({ twin }: DigitalTwinWidgetProps) {
       <div className="flex items-center gap-4">
         <HealthRing score={twin.health_score} />
         <div className="flex-1 min-w-0">
-          <p className="text-xs font-mono font-bold text-slate-200 truncate">
-            {twin.asset_name}
-          </p>
+          <p className="text-xs font-mono font-bold text-slate-200 truncate">{twin.asset_name}</p>
           <p className="text-[9px] font-mono text-slate-500 mt-0.5">DIGITAL TWIN</p>
           <p className={cn("text-sm font-mono font-bold mt-1", healthColor)}>
             Health: {twin.health_score.toFixed(0)}/100
@@ -128,7 +131,13 @@ export function DigitalTwinWidget({ twin }: DigitalTwinWidgetProps) {
           icon={ThermometerSun}
           label="Temperature"
           value={`${twin.temperature_celsius.toFixed(1)}°C`}
-          valueClass={twin.temperature_celsius > 55 ? "text-red-400" : twin.temperature_celsius > 40 ? "text-amber-400" : "text-teal-400"}
+          valueClass={
+            twin.temperature_celsius > 55
+              ? "text-red-400"
+              : twin.temperature_celsius > 40
+                ? "text-amber-400"
+                : "text-teal-400"
+          }
         />
         <MetricRow
           icon={Wind}

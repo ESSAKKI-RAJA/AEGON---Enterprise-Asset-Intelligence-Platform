@@ -1,3 +1,4 @@
+from typing import Optional
 from typing import List, Dict, Any
 from sqlalchemy import select, or_
 from app.services.base import BaseService, track_metrics
@@ -11,7 +12,7 @@ class SearchService(BaseService):
     Global Natural Language Search for the Enterprise.
     Supports parsing natural language to find matching entities.
     """
-    def __init__(self, uow: UnitOfWork, event_dispatcher: EventDispatcher = None):
+    def __init__(self, uow: UnitOfWork, event_dispatcher: Optional[EventDispatcher] = None):
         super().__init__(uow, event_dispatcher)
 
     @track_metrics("global_search")
@@ -77,7 +78,7 @@ class SearchService(BaseService):
             # 4. Search Users
             from app.models.identity import User
             user_stmt = select(User).where(
-                User.is_active == True,
+                User.is_active.is_(True),
                 or_(
                     User.email.ilike(f"%{query}%"),
                     User.first_name.ilike(f"%{query}%"),

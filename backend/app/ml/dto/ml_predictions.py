@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict, Any, Optional
+from typing import Dict
 
 class SHAPExplanation(BaseModel):
     top_features: Dict[str, float]

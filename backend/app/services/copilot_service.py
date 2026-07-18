@@ -1,5 +1,6 @@
+from typing import Optional
 import uuid
-from typing import Dict, Any, List
+from typing import Dict, Any
 from app.services.base import BaseService, track_metrics
 from app.repositories.base import UnitOfWork
 from app.core.events import EventDispatcher
@@ -8,7 +9,7 @@ from app.services.rag_service import RAGService
 from app.ai.llm_gateway import llm_gateway
 
 class CopilotService(BaseService):
-    def __init__(self, uow: UnitOfWork, event_dispatcher: EventDispatcher = None):
+    def __init__(self, uow: UnitOfWork, event_dispatcher: Optional[EventDispatcher] = None):
         super().__init__(uow, event_dispatcher)
         self.rag_service = RAGService(uow=self.uow, event_dispatcher=self.event_dispatcher)
 

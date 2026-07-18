@@ -1,9 +1,10 @@
+from typing import Optional
 from typing import Any, Callable, TypeVar, Awaitable
 from functools import wraps
 import time
 import logging
 
-from app.repositories.base import UnitOfWork, translate_db_exception, RepositoryException
+from app.repositories.base import UnitOfWork, RepositoryException
 from app.exceptions.service import translate_repo_exception
 from app.core.events import EventDispatcher, dispatcher as default_dispatcher
 from app.core.validation import ValidationPipeline
@@ -18,7 +19,7 @@ class BaseService:
     Provides standard capabilities like transaction management, validation,
     event publishing, exception translation, and performance metrics.
     """
-    def __init__(self, uow: UnitOfWork, event_dispatcher: EventDispatcher = None):
+    def __init__(self, uow: UnitOfWork, event_dispatcher: Optional[EventDispatcher] = None):
         self.uow = uow
         # Default to the global dispatcher if none provided
         self.dispatcher = event_dispatcher or default_dispatcher

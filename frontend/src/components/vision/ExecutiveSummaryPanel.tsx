@@ -36,7 +36,9 @@ function AnimatedNarrative({ text }: { text: string }) {
   return (
     <p className="text-sm text-slate-300 leading-relaxed font-mono whitespace-pre-line">
       {displayed}
-      {!done && <span className="inline-block w-0.5 h-4 bg-teal-400 animate-pulse align-middle ml-0.5" />}
+      {!done && (
+        <span className="inline-block w-0.5 h-4 bg-teal-400 animate-pulse align-middle ml-0.5" />
+      )}
     </p>
   );
 }
@@ -111,9 +113,7 @@ export function ExecutiveSummaryPanel({
               >
                 {cnt}
               </div>
-              <div className="text-[9px] font-mono text-slate-500 uppercase mt-0.5">
-                {sev}
-              </div>
+              <div className="text-[9px] font-mono text-slate-500 uppercase mt-0.5">{sev}</div>
             </div>
           ))}
         </div>

@@ -1,8 +1,8 @@
+from __future__ import annotations
 import uuid
 from datetime import date, datetime
 from typing import List, Optional
-from sqlalchemy import String, Float, Integer, ForeignKey, Date, DateTime, Enum, text, CheckConstraint
-from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy import String, Float, ForeignKey, Date, DateTime, Enum, CheckConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import AuditableBase
 from app.models.enums import BudgetStatus

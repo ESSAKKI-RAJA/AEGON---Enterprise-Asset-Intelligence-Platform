@@ -1,7 +1,8 @@
+from typing import Optional
 from typing import Optional, List
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.user import UserRepository
-from app.schemas.core import UserCreate, UserUpdate
+from app.schemas.core import UserCreate
 from app.models import User
 from fastapi import HTTPException, status
 from app.services.base import BaseService, track_metrics
@@ -9,7 +10,7 @@ from app.repositories.base import UnitOfWork
 from app.core.events import EventDispatcher
 
 class UserService(BaseService):
-    def __init__(self, uow: UnitOfWork, event_dispatcher: EventDispatcher = None):
+    def __init__(self, uow: UnitOfWork, event_dispatcher: Optional[EventDispatcher] = None):
         super().__init__(uow, event_dispatcher)
 
     @track_metrics("get_user_by_email")

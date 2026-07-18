@@ -1,8 +1,7 @@
-from fastapi import APIRouter, Depends, status
-from typing import List, Any
+from fastapi import APIRouter, Depends
+from typing import Any
 from dependency_injector.wiring import Provide, inject
 
-from app.services.ai_service import AIService
 from app.services.copilot_service import CopilotService
 from app.services.search_service import SearchService
 from app.core.container import Container

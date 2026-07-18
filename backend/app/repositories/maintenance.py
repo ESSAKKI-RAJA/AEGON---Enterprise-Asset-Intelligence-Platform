@@ -1,7 +1,7 @@
-from typing import Optional, List
+from typing import Optional
 from uuid import UUID
-from datetime import date, datetime
-from sqlalchemy import select, and_, func
+from datetime import datetime
+from sqlalchemy import select, func, or_
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.base import BaseRepository, translate_db_exception, Page, QuerySpecification, FilterSpec, FilterOperator, CacheHook, AuditHook
 from app.models.maintenance import MaintenanceRecord, WorkOrder
@@ -45,7 +45,7 @@ class MaintenanceRepository(BaseRepository[MaintenanceRecord]):
         try:
             stmt = select(self.model_class).where(
                 self.model_class.asset_id == asset_id,
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             ).order_by(self.model_class.date_performed.asc())
             
             result = await self.session.execute(stmt)
@@ -73,7 +73,7 @@ class MaintenanceRepository(BaseRepository[MaintenanceRecord]):
 
     async def get_cost_trend(self, months: int = 6) -> list:
         from sqlalchemy import select, func
-        from datetime import datetime, timedelta
+        from datetime import timedelta
         try:
             trend = []
             for i in range(months):
@@ -115,7 +115,7 @@ class WorkOrderRepository(BaseRepository[WorkOrder]):
         try:
             stmt = select(self.model_class).where(
                 self.model_class.wo_number == wo_number,
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             )
             result = await self.session.execute(stmt)
             return result.scalar_one_or_none()
@@ -139,7 +139,7 @@ class WorkOrderRepository(BaseRepository[WorkOrder]):
         from sqlalchemy import select, func
         try:
             stmt = select(func.count(self.model_class.id)).where(
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             )
             res = await self.session.execute(stmt)
             return res.scalar() or 0
@@ -151,7 +151,7 @@ class WorkOrderRepository(BaseRepository[WorkOrder]):
         try:
             stmt = select(func.count(self.model_class.id)).where(
                 self.model_class.status == status,
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             )
             res = await self.session.execute(stmt)
             return res.scalar() or 0
@@ -172,13 +172,13 @@ class WorkOrderRepository(BaseRepository[WorkOrder]):
             )
             
             if hasattr(self.model_class, 'is_deleted'):
-                query = query.where(self.model_class.is_deleted == False)
+                query = query.where(self.model_class.is_deleted .is_(False))
             
             query = spec.apply_to_query(query, self.model_class)
             
             count_query = select(func.count()).select_from(self.model_class)
             if hasattr(self.model_class, 'is_deleted'):
-                count_query = count_query.where(self.model_class.is_deleted == False)
+                count_query = count_query.where(self.model_class.is_deleted .is_(False))
             for filter_spec in spec.filters:
                 count_query = count_query.where(filter_spec.to_sqlalchemy(self.model_class))
             if spec.search_query and spec.search_fields:

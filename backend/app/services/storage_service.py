@@ -1,3 +1,4 @@
+from typing import Optional
 import logging
 import uuid
 from typing import Optional
@@ -14,7 +15,7 @@ class StorageService:
     def __init__(self):
         self.bucket_name = "aegon-enterprise-assets"
         # Supabase/S3 client initialized via config in production
-        self.storage_domain = getattr(settings, "STORAGE_DOMAIN", f"https://api.aegon-enterprise.internal/storage")
+        self.storage_domain = getattr(settings, "STORAGE_DOMAIN", "https://api.aegon-enterprise.internal/storage")
         
     async def upload_file(self, file_path: str, file_content: bytes, content_type: str = "application/octet-stream") -> str:
         """

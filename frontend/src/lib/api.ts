@@ -1,9 +1,12 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://127.0.0.1:8000/api/v1");
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || (import.meta.env.PROD ? "" : "http://127.0.0.1:8000/api/v1");
 
 if (!import.meta.env.VITE_API_URL && import.meta.env.PROD) {
-  console.warn("WARNING: VITE_API_URL is not set in production. Ensure the backend URL is properly configured in Vercel.");
+  console.warn(
+    "WARNING: VITE_API_URL is not set in production. Ensure the backend URL is properly configured in Vercel.",
+  );
 }
 
 export const apiClient = axios.create({

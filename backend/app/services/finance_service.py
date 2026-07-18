@@ -1,10 +1,10 @@
+from typing import Optional
 from typing import Dict, Any, List
 from sqlalchemy import select, func
 from app.services.base import BaseService
 from app.repositories.finance import FinanceRepository
-from app.models.finance import Budget, Expense, DepartmentBudget
+from app.models.finance import Budget, Expense
 from app.models.asset import Asset
-from app.models.organization import Department
 
 class FinanceService(BaseService):
     async def get_budgets(self) -> List[Dict[str, Any]]:
@@ -62,7 +62,7 @@ class FinanceService(BaseService):
     async def get_finance_overview(self) -> Dict[str, Any]:
         async def _operation():
             session = self.uow.session
-            from app.models.finance import CostCenter, Budget, Expense
+            from app.models.finance import Expense
             
             # Total Asset Value
             total_assets_value = await session.scalar(select(func.sum(Asset.current_value))) or 0.0
@@ -82,7 +82,7 @@ class FinanceService(BaseService):
             ) or 0.0
             
             # Department Budgets (Mapped from CostCenter & Budget)
-            from app.models.finance import CostCenter, Budget, Expense
+            from app.models.finance import Expense
             from sqlalchemy.orm import selectinload
             
             # Fetch Budgets with their CostCenters

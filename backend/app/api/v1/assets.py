@@ -1,9 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, status
-from typing import List, Any
+from fastapi import APIRouter, Depends, status
+from typing import Any
 import uuid
 from dependency_injector.wiring import Provide, inject
 
-from app.schemas.asset import AssetCreate, AssetUpdate, AssetResponse, AssetDigitalTwinResponse, AssetRegistryResponse
+from app.schemas.asset import AssetCreate, AssetResponse, AssetDigitalTwinResponse, AssetRegistryResponse
 from app.services.asset_service import AssetService
 from app.core.container import Container
 

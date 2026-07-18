@@ -51,12 +51,12 @@ def predict_asset_failure(df: pd.DataFrame) -> List[AssetFailurePredictionDTO]:
         if prob > 0.7:
             risk_category = "HIGH"
             rul = np.random.randint(5, 30)
-            business_impact = f"High risk of immediate failure. Potential operational halt."
+            business_impact = "High risk of immediate failure. Potential operational halt."
             action = "Schedule emergency maintenance or replacement immediately."
         elif prob > 0.3:
             risk_category = "MEDIUM"
             rul = np.random.randint(31, 180)
-            business_impact = f"Moderate risk. Could lead to unplanned downtime."
+            business_impact = "Moderate risk. Could lead to unplanned downtime."
             action = "Schedule preventive maintenance within 30 days."
         else:
             risk_category = "LOW"

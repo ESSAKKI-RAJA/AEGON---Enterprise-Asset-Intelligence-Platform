@@ -8,340 +8,338 @@
 // You should NOT make any changes in this file as it will be overwritten.
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
-import { Route as rootRouteImport } from './routes/__root'
-import { Route as AppRouteImport } from './routes/_app'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as AppVisionIntelligenceRouteImport } from './routes/_app.vision-intelligence'
-import { Route as AppSettingsRouteImport } from './routes/_app.settings'
-import { Route as AppSecurityRouteImport } from './routes/_app.security'
-import { Route as AppProcurementRouteImport } from './routes/_app.procurement'
-import { Route as AppMaintenanceRouteImport } from './routes/_app.maintenance'
-import { Route as AppInventoryRouteImport } from './routes/_app.inventory'
-import { Route as AppFinanceRouteImport } from './routes/_app.finance'
-import { Route as AppDigitalTwinRouteImport } from './routes/_app.digital-twin'
-import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
-import { Route as AppAssetsRouteImport } from './routes/_app.assets'
-import { Route as AppAnalyticsRouteImport } from './routes/_app.analytics'
-import { Route as AppAiIntelligenceRouteImport } from './routes/_app.ai-intelligence'
-import { Route as AppAssetsAssetIdRouteImport } from './routes/_app.assets.$assetId'
+import { Route as rootRouteImport } from "./routes/__root";
+import { Route as AppRouteImport } from "./routes/_app";
+import { Route as IndexRouteImport } from "./routes/index";
+import { Route as AppVisionIntelligenceRouteImport } from "./routes/_app.vision-intelligence";
+import { Route as AppSettingsRouteImport } from "./routes/_app.settings";
+import { Route as AppSecurityRouteImport } from "./routes/_app.security";
+import { Route as AppProcurementRouteImport } from "./routes/_app.procurement";
+import { Route as AppMaintenanceRouteImport } from "./routes/_app.maintenance";
+import { Route as AppInventoryRouteImport } from "./routes/_app.inventory";
+import { Route as AppFinanceRouteImport } from "./routes/_app.finance";
+import { Route as AppDigitalTwinRouteImport } from "./routes/_app.digital-twin";
+import { Route as AppDashboardRouteImport } from "./routes/_app.dashboard";
+import { Route as AppAssetsRouteImport } from "./routes/_app.assets";
+import { Route as AppAnalyticsRouteImport } from "./routes/_app.analytics";
+import { Route as AppAiIntelligenceRouteImport } from "./routes/_app.ai-intelligence";
+import { Route as AppAssetsAssetIdRouteImport } from "./routes/_app.assets.$assetId";
 
 const AppRoute = AppRouteImport.update({
-  id: '/_app',
+  id: "/_app",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const IndexRoute = IndexRouteImport.update({
-  id: '/',
-  path: '/',
+  id: "/",
+  path: "/",
   getParentRoute: () => rootRouteImport,
-} as any)
+} as any);
 const AppVisionIntelligenceRoute = AppVisionIntelligenceRouteImport.update({
-  id: '/vision-intelligence',
-  path: '/vision-intelligence',
+  id: "/vision-intelligence",
+  path: "/vision-intelligence",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppSettingsRoute = AppSettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
+  id: "/settings",
+  path: "/settings",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppSecurityRoute = AppSecurityRouteImport.update({
-  id: '/security',
-  path: '/security',
+  id: "/security",
+  path: "/security",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppProcurementRoute = AppProcurementRouteImport.update({
-  id: '/procurement',
-  path: '/procurement',
+  id: "/procurement",
+  path: "/procurement",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppMaintenanceRoute = AppMaintenanceRouteImport.update({
-  id: '/maintenance',
-  path: '/maintenance',
+  id: "/maintenance",
+  path: "/maintenance",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppInventoryRoute = AppInventoryRouteImport.update({
-  id: '/inventory',
-  path: '/inventory',
+  id: "/inventory",
+  path: "/inventory",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppFinanceRoute = AppFinanceRouteImport.update({
-  id: '/finance',
-  path: '/finance',
+  id: "/finance",
+  path: "/finance",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppDigitalTwinRoute = AppDigitalTwinRouteImport.update({
-  id: '/digital-twin',
-  path: '/digital-twin',
+  id: "/digital-twin",
+  path: "/digital-twin",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppDashboardRoute = AppDashboardRouteImport.update({
-  id: '/dashboard',
-  path: '/dashboard',
+  id: "/dashboard",
+  path: "/dashboard",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppAssetsRoute = AppAssetsRouteImport.update({
-  id: '/assets',
-  path: '/assets',
+  id: "/assets",
+  path: "/assets",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppAnalyticsRoute = AppAnalyticsRouteImport.update({
-  id: '/analytics',
-  path: '/analytics',
+  id: "/analytics",
+  path: "/analytics",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppAiIntelligenceRoute = AppAiIntelligenceRouteImport.update({
-  id: '/ai-intelligence',
-  path: '/ai-intelligence',
+  id: "/ai-intelligence",
+  path: "/ai-intelligence",
   getParentRoute: () => AppRoute,
-} as any)
+} as any);
 const AppAssetsAssetIdRoute = AppAssetsAssetIdRouteImport.update({
-  id: '/$assetId',
-  path: '/$assetId',
+  id: "/$assetId",
+  path: "/$assetId",
   getParentRoute: () => AppAssetsRoute,
-} as any)
+} as any);
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/ai-intelligence': typeof AppAiIntelligenceRoute
-  '/analytics': typeof AppAnalyticsRoute
-  '/assets': typeof AppAssetsRouteWithChildren
-  '/dashboard': typeof AppDashboardRoute
-  '/digital-twin': typeof AppDigitalTwinRoute
-  '/finance': typeof AppFinanceRoute
-  '/inventory': typeof AppInventoryRoute
-  '/maintenance': typeof AppMaintenanceRoute
-  '/procurement': typeof AppProcurementRoute
-  '/security': typeof AppSecurityRoute
-  '/settings': typeof AppSettingsRoute
-  '/vision-intelligence': typeof AppVisionIntelligenceRoute
-  '/assets/$assetId': typeof AppAssetsAssetIdRoute
+  "/": typeof IndexRoute;
+  "/ai-intelligence": typeof AppAiIntelligenceRoute;
+  "/analytics": typeof AppAnalyticsRoute;
+  "/assets": typeof AppAssetsRouteWithChildren;
+  "/dashboard": typeof AppDashboardRoute;
+  "/digital-twin": typeof AppDigitalTwinRoute;
+  "/finance": typeof AppFinanceRoute;
+  "/inventory": typeof AppInventoryRoute;
+  "/maintenance": typeof AppMaintenanceRoute;
+  "/procurement": typeof AppProcurementRoute;
+  "/security": typeof AppSecurityRoute;
+  "/settings": typeof AppSettingsRoute;
+  "/vision-intelligence": typeof AppVisionIntelligenceRoute;
+  "/assets/$assetId": typeof AppAssetsAssetIdRoute;
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/ai-intelligence': typeof AppAiIntelligenceRoute
-  '/analytics': typeof AppAnalyticsRoute
-  '/assets': typeof AppAssetsRouteWithChildren
-  '/dashboard': typeof AppDashboardRoute
-  '/digital-twin': typeof AppDigitalTwinRoute
-  '/finance': typeof AppFinanceRoute
-  '/inventory': typeof AppInventoryRoute
-  '/maintenance': typeof AppMaintenanceRoute
-  '/procurement': typeof AppProcurementRoute
-  '/security': typeof AppSecurityRoute
-  '/settings': typeof AppSettingsRoute
-  '/vision-intelligence': typeof AppVisionIntelligenceRoute
-  '/assets/$assetId': typeof AppAssetsAssetIdRoute
+  "/": typeof IndexRoute;
+  "/ai-intelligence": typeof AppAiIntelligenceRoute;
+  "/analytics": typeof AppAnalyticsRoute;
+  "/assets": typeof AppAssetsRouteWithChildren;
+  "/dashboard": typeof AppDashboardRoute;
+  "/digital-twin": typeof AppDigitalTwinRoute;
+  "/finance": typeof AppFinanceRoute;
+  "/inventory": typeof AppInventoryRoute;
+  "/maintenance": typeof AppMaintenanceRoute;
+  "/procurement": typeof AppProcurementRoute;
+  "/security": typeof AppSecurityRoute;
+  "/settings": typeof AppSettingsRoute;
+  "/vision-intelligence": typeof AppVisionIntelligenceRoute;
+  "/assets/$assetId": typeof AppAssetsAssetIdRoute;
 }
 export interface FileRoutesById {
-  __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/_app': typeof AppRouteWithChildren
-  '/_app/ai-intelligence': typeof AppAiIntelligenceRoute
-  '/_app/analytics': typeof AppAnalyticsRoute
-  '/_app/assets': typeof AppAssetsRouteWithChildren
-  '/_app/dashboard': typeof AppDashboardRoute
-  '/_app/digital-twin': typeof AppDigitalTwinRoute
-  '/_app/finance': typeof AppFinanceRoute
-  '/_app/inventory': typeof AppInventoryRoute
-  '/_app/maintenance': typeof AppMaintenanceRoute
-  '/_app/procurement': typeof AppProcurementRoute
-  '/_app/security': typeof AppSecurityRoute
-  '/_app/settings': typeof AppSettingsRoute
-  '/_app/vision-intelligence': typeof AppVisionIntelligenceRoute
-  '/_app/assets/$assetId': typeof AppAssetsAssetIdRoute
+  __root__: typeof rootRouteImport;
+  "/": typeof IndexRoute;
+  "/_app": typeof AppRouteWithChildren;
+  "/_app/ai-intelligence": typeof AppAiIntelligenceRoute;
+  "/_app/analytics": typeof AppAnalyticsRoute;
+  "/_app/assets": typeof AppAssetsRouteWithChildren;
+  "/_app/dashboard": typeof AppDashboardRoute;
+  "/_app/digital-twin": typeof AppDigitalTwinRoute;
+  "/_app/finance": typeof AppFinanceRoute;
+  "/_app/inventory": typeof AppInventoryRoute;
+  "/_app/maintenance": typeof AppMaintenanceRoute;
+  "/_app/procurement": typeof AppProcurementRoute;
+  "/_app/security": typeof AppSecurityRoute;
+  "/_app/settings": typeof AppSettingsRoute;
+  "/_app/vision-intelligence": typeof AppVisionIntelligenceRoute;
+  "/_app/assets/$assetId": typeof AppAssetsAssetIdRoute;
 }
 export interface FileRouteTypes {
-  fileRoutesByFullPath: FileRoutesByFullPath
+  fileRoutesByFullPath: FileRoutesByFullPath;
   fullPaths:
-    | '/'
-    | '/ai-intelligence'
-    | '/analytics'
-    | '/assets'
-    | '/dashboard'
-    | '/digital-twin'
-    | '/finance'
-    | '/inventory'
-    | '/maintenance'
-    | '/procurement'
-    | '/security'
-    | '/settings'
-    | '/vision-intelligence'
-    | '/assets/$assetId'
-  fileRoutesByTo: FileRoutesByTo
+    | "/"
+    | "/ai-intelligence"
+    | "/analytics"
+    | "/assets"
+    | "/dashboard"
+    | "/digital-twin"
+    | "/finance"
+    | "/inventory"
+    | "/maintenance"
+    | "/procurement"
+    | "/security"
+    | "/settings"
+    | "/vision-intelligence"
+    | "/assets/$assetId";
+  fileRoutesByTo: FileRoutesByTo;
   to:
-    | '/'
-    | '/ai-intelligence'
-    | '/analytics'
-    | '/assets'
-    | '/dashboard'
-    | '/digital-twin'
-    | '/finance'
-    | '/inventory'
-    | '/maintenance'
-    | '/procurement'
-    | '/security'
-    | '/settings'
-    | '/vision-intelligence'
-    | '/assets/$assetId'
+    | "/"
+    | "/ai-intelligence"
+    | "/analytics"
+    | "/assets"
+    | "/dashboard"
+    | "/digital-twin"
+    | "/finance"
+    | "/inventory"
+    | "/maintenance"
+    | "/procurement"
+    | "/security"
+    | "/settings"
+    | "/vision-intelligence"
+    | "/assets/$assetId";
   id:
-    | '__root__'
-    | '/'
-    | '/_app'
-    | '/_app/ai-intelligence'
-    | '/_app/analytics'
-    | '/_app/assets'
-    | '/_app/dashboard'
-    | '/_app/digital-twin'
-    | '/_app/finance'
-    | '/_app/inventory'
-    | '/_app/maintenance'
-    | '/_app/procurement'
-    | '/_app/security'
-    | '/_app/settings'
-    | '/_app/vision-intelligence'
-    | '/_app/assets/$assetId'
-  fileRoutesById: FileRoutesById
+    | "__root__"
+    | "/"
+    | "/_app"
+    | "/_app/ai-intelligence"
+    | "/_app/analytics"
+    | "/_app/assets"
+    | "/_app/dashboard"
+    | "/_app/digital-twin"
+    | "/_app/finance"
+    | "/_app/inventory"
+    | "/_app/maintenance"
+    | "/_app/procurement"
+    | "/_app/security"
+    | "/_app/settings"
+    | "/_app/vision-intelligence"
+    | "/_app/assets/$assetId";
+  fileRoutesById: FileRoutesById;
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  AppRoute: typeof AppRouteWithChildren
+  IndexRoute: typeof IndexRoute;
+  AppRoute: typeof AppRouteWithChildren;
 }
 
-declare module '@tanstack/react-router' {
+declare module "@tanstack/react-router" {
   interface FileRoutesByPath {
-    '/_app': {
-      id: '/_app'
-      path: ''
-      fullPath: '/'
-      preLoaderRoute: typeof AppRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
-      path: '/'
-      fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/_app/vision-intelligence': {
-      id: '/_app/vision-intelligence'
-      path: '/vision-intelligence'
-      fullPath: '/vision-intelligence'
-      preLoaderRoute: typeof AppVisionIntelligenceRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/settings': {
-      id: '/_app/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof AppSettingsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/security': {
-      id: '/_app/security'
-      path: '/security'
-      fullPath: '/security'
-      preLoaderRoute: typeof AppSecurityRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/procurement': {
-      id: '/_app/procurement'
-      path: '/procurement'
-      fullPath: '/procurement'
-      preLoaderRoute: typeof AppProcurementRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/maintenance': {
-      id: '/_app/maintenance'
-      path: '/maintenance'
-      fullPath: '/maintenance'
-      preLoaderRoute: typeof AppMaintenanceRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/inventory': {
-      id: '/_app/inventory'
-      path: '/inventory'
-      fullPath: '/inventory'
-      preLoaderRoute: typeof AppInventoryRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/finance': {
-      id: '/_app/finance'
-      path: '/finance'
-      fullPath: '/finance'
-      preLoaderRoute: typeof AppFinanceRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/digital-twin': {
-      id: '/_app/digital-twin'
-      path: '/digital-twin'
-      fullPath: '/digital-twin'
-      preLoaderRoute: typeof AppDigitalTwinRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/dashboard': {
-      id: '/_app/dashboard'
-      path: '/dashboard'
-      fullPath: '/dashboard'
-      preLoaderRoute: typeof AppDashboardRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/assets': {
-      id: '/_app/assets'
-      path: '/assets'
-      fullPath: '/assets'
-      preLoaderRoute: typeof AppAssetsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/analytics': {
-      id: '/_app/analytics'
-      path: '/analytics'
-      fullPath: '/analytics'
-      preLoaderRoute: typeof AppAnalyticsRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/ai-intelligence': {
-      id: '/_app/ai-intelligence'
-      path: '/ai-intelligence'
-      fullPath: '/ai-intelligence'
-      preLoaderRoute: typeof AppAiIntelligenceRouteImport
-      parentRoute: typeof AppRoute
-    }
-    '/_app/assets/$assetId': {
-      id: '/_app/assets/$assetId'
-      path: '/$assetId'
-      fullPath: '/assets/$assetId'
-      preLoaderRoute: typeof AppAssetsAssetIdRouteImport
-      parentRoute: typeof AppAssetsRoute
-    }
+    "/_app": {
+      id: "/_app";
+      path: "";
+      fullPath: "/";
+      preLoaderRoute: typeof AppRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/": {
+      id: "/";
+      path: "/";
+      fullPath: "/";
+      preLoaderRoute: typeof IndexRouteImport;
+      parentRoute: typeof rootRouteImport;
+    };
+    "/_app/vision-intelligence": {
+      id: "/_app/vision-intelligence";
+      path: "/vision-intelligence";
+      fullPath: "/vision-intelligence";
+      preLoaderRoute: typeof AppVisionIntelligenceRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/settings": {
+      id: "/_app/settings";
+      path: "/settings";
+      fullPath: "/settings";
+      preLoaderRoute: typeof AppSettingsRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/security": {
+      id: "/_app/security";
+      path: "/security";
+      fullPath: "/security";
+      preLoaderRoute: typeof AppSecurityRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/procurement": {
+      id: "/_app/procurement";
+      path: "/procurement";
+      fullPath: "/procurement";
+      preLoaderRoute: typeof AppProcurementRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/maintenance": {
+      id: "/_app/maintenance";
+      path: "/maintenance";
+      fullPath: "/maintenance";
+      preLoaderRoute: typeof AppMaintenanceRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/inventory": {
+      id: "/_app/inventory";
+      path: "/inventory";
+      fullPath: "/inventory";
+      preLoaderRoute: typeof AppInventoryRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/finance": {
+      id: "/_app/finance";
+      path: "/finance";
+      fullPath: "/finance";
+      preLoaderRoute: typeof AppFinanceRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/digital-twin": {
+      id: "/_app/digital-twin";
+      path: "/digital-twin";
+      fullPath: "/digital-twin";
+      preLoaderRoute: typeof AppDigitalTwinRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/dashboard": {
+      id: "/_app/dashboard";
+      path: "/dashboard";
+      fullPath: "/dashboard";
+      preLoaderRoute: typeof AppDashboardRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/assets": {
+      id: "/_app/assets";
+      path: "/assets";
+      fullPath: "/assets";
+      preLoaderRoute: typeof AppAssetsRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/analytics": {
+      id: "/_app/analytics";
+      path: "/analytics";
+      fullPath: "/analytics";
+      preLoaderRoute: typeof AppAnalyticsRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/ai-intelligence": {
+      id: "/_app/ai-intelligence";
+      path: "/ai-intelligence";
+      fullPath: "/ai-intelligence";
+      preLoaderRoute: typeof AppAiIntelligenceRouteImport;
+      parentRoute: typeof AppRoute;
+    };
+    "/_app/assets/$assetId": {
+      id: "/_app/assets/$assetId";
+      path: "/$assetId";
+      fullPath: "/assets/$assetId";
+      preLoaderRoute: typeof AppAssetsAssetIdRouteImport;
+      parentRoute: typeof AppAssetsRoute;
+    };
   }
 }
 
 interface AppAssetsRouteChildren {
-  AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute
+  AppAssetsAssetIdRoute: typeof AppAssetsAssetIdRoute;
 }
 
 const AppAssetsRouteChildren: AppAssetsRouteChildren = {
   AppAssetsAssetIdRoute: AppAssetsAssetIdRoute,
-}
+};
 
-const AppAssetsRouteWithChildren = AppAssetsRoute._addFileChildren(
-  AppAssetsRouteChildren,
-)
+const AppAssetsRouteWithChildren = AppAssetsRoute._addFileChildren(AppAssetsRouteChildren);
 
 interface AppRouteChildren {
-  AppAiIntelligenceRoute: typeof AppAiIntelligenceRoute
-  AppAnalyticsRoute: typeof AppAnalyticsRoute
-  AppAssetsRoute: typeof AppAssetsRouteWithChildren
-  AppDashboardRoute: typeof AppDashboardRoute
-  AppDigitalTwinRoute: typeof AppDigitalTwinRoute
-  AppFinanceRoute: typeof AppFinanceRoute
-  AppInventoryRoute: typeof AppInventoryRoute
-  AppMaintenanceRoute: typeof AppMaintenanceRoute
-  AppProcurementRoute: typeof AppProcurementRoute
-  AppSecurityRoute: typeof AppSecurityRoute
-  AppSettingsRoute: typeof AppSettingsRoute
-  AppVisionIntelligenceRoute: typeof AppVisionIntelligenceRoute
+  AppAiIntelligenceRoute: typeof AppAiIntelligenceRoute;
+  AppAnalyticsRoute: typeof AppAnalyticsRoute;
+  AppAssetsRoute: typeof AppAssetsRouteWithChildren;
+  AppDashboardRoute: typeof AppDashboardRoute;
+  AppDigitalTwinRoute: typeof AppDigitalTwinRoute;
+  AppFinanceRoute: typeof AppFinanceRoute;
+  AppInventoryRoute: typeof AppInventoryRoute;
+  AppMaintenanceRoute: typeof AppMaintenanceRoute;
+  AppProcurementRoute: typeof AppProcurementRoute;
+  AppSecurityRoute: typeof AppSecurityRoute;
+  AppSettingsRoute: typeof AppSettingsRoute;
+  AppVisionIntelligenceRoute: typeof AppVisionIntelligenceRoute;
 }
 
 const AppRouteChildren: AppRouteChildren = {
@@ -357,24 +355,24 @@ const AppRouteChildren: AppRouteChildren = {
   AppSecurityRoute: AppSecurityRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppVisionIntelligenceRoute: AppVisionIntelligenceRoute,
-}
+};
 
-const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren)
+const AppRouteWithChildren = AppRoute._addFileChildren(AppRouteChildren);
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AppRoute: AppRouteWithChildren,
-}
+};
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
-  ._addFileTypes<FileRouteTypes>()
+  ._addFileTypes<FileRouteTypes>();
 
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
+import type { getRouter } from "./router.tsx";
+import type { startInstance } from "./start.ts";
+declare module "@tanstack/react-start" {
   interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+    ssr: true;
+    router: Awaited<ReturnType<typeof getRouter>>;
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>;
   }
 }

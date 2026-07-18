@@ -1,8 +1,9 @@
+from __future__ import annotations
 import uuid
 from datetime import datetime
-from typing import List, Optional
-from sqlalchemy import String, ForeignKey, DateTime, Text, Boolean
-from sqlalchemy.dialects.postgresql import UUID, JSONB
+from typing import List
+from sqlalchemy import String, ForeignKey, DateTime
+from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.types import JSON
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from app.models.base import AuditableBase

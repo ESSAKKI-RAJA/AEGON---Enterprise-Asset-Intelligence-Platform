@@ -14,19 +14,18 @@ from dataclasses import dataclass, field
 from datetime import datetime
 from enum import Enum
 from typing import (
-    Any, Generic, Optional, TypeVar, Type, Dict, List, Union
+    Any, Generic, Optional, TypeVar, Type, Dict, List
 )
-from uuid import UUID, uuid4
+from uuid import UUID
 
 from sqlalchemy import (
     or_, desc, asc, func, select, delete, 
-    DateTime, inspect
+    inspect
 )
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.exc import IntegrityError, SQLAlchemyError, NoResultFound
 from sqlalchemy.sql import ColumnElement
 
-from app.core.database import Base
 
 
 # ============================================================================
@@ -431,7 +430,7 @@ class BaseRepository(Generic[T], ABC):
             )
             # Filter soft deleted by default if model supports it
             if hasattr(self.model_class, 'is_deleted'):
-                stmt = stmt.where(self.model_class.is_deleted == False)
+                stmt = stmt.where(self.model_class.is_deleted .is_(False))
                 
             result = await self.session.execute(stmt)
             return result.scalar_one_or_none()
@@ -685,7 +684,7 @@ class BaseRepository(Generic[T], ABC):
             
             # Exclude soft-deleted by default
             if hasattr(self.model_class, 'is_deleted'):
-                query = query.where(self.model_class.is_deleted == False)
+                query = query.where(self.model_class.is_deleted .is_(False))
             
             # Apply specification
             query = spec.apply_to_query(query, self.model_class)
@@ -693,7 +692,7 @@ class BaseRepository(Generic[T], ABC):
             # Count total (without limit/offset)
             count_query = select(func.count()).select_from(self.model_class)
             if hasattr(self.model_class, 'is_deleted'):
-                count_query = count_query.where(self.model_class.is_deleted == False)
+                count_query = count_query.where(self.model_class.is_deleted .is_(False))
             for filter_spec in spec.filters:
                 count_query = count_query.where(filter_spec.to_sqlalchemy(self.model_class))
             if spec.search_query and spec.search_fields:

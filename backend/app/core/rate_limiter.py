@@ -2,8 +2,6 @@ from fastapi import Request, HTTPException, status
 from redis.asyncio import Redis
 from app.core.config import settings
 from typing import Optional
-import time
-import hashlib
 
 # Default global redis instance, initialized in lifespan
 redis_client: Optional[Redis] = None

@@ -1,8 +1,9 @@
+from typing import Optional
 from typing import Dict, Any, List
 from sqlalchemy import select, func
 from app.services.base import BaseService
 from app.repositories.inventory import InventoryRepository
-from app.models.inventory import InventoryItem, StockAlert
+from app.models.inventory import InventoryItem
 
 class InventoryService(BaseService):
     async def get_warehouse_stock(self) -> List[Dict[str, Any]]:
@@ -56,7 +57,6 @@ class InventoryService(BaseService):
     async def get_inventory_overview(self) -> Dict[str, Any]:
         async def _operation():
             session = self.uow.session
-            repo = self.uow.get_repository(InventoryRepository)
             
             total_items = await session.scalar(select(func.count(InventoryItem.id))) or 0
             

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, Query
 from typing import Any
-from app.api.deps import get_db, get_uow, get_current_user
+from app.api.deps import get_uow, get_current_user
 from app.services.search_service import SearchService
 from app.repositories.base import UnitOfWork
 from app.core.events import dispatcher

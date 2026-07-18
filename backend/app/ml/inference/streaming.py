@@ -1,5 +1,4 @@
 from typing import Dict, Any
-from app.ml.dto.prediction import PredictionDTO
 
 class StreamingPredictor:
     """

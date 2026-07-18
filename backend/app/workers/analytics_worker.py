@@ -23,5 +23,5 @@ def process_iot_telemetry(self, device_id: str, data: dict):
     """
     logger.info(f"Processing IoT data for device {device_id}...")
     time.sleep(1)
-    logger.info(f"IoT data processed successfully.")
+    logger.info("IoT data processed successfully.")
     return True

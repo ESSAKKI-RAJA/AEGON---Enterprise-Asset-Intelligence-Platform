@@ -1,3 +1,4 @@
+from typing import Optional
 """
 AEGON Auth Service
 ===================
@@ -10,7 +11,6 @@ Supabase Auth. This service only manages the local user profile mirror.
 """
 
 from typing import Optional
-from fastapi import HTTPException, status
 
 from app.services.base import BaseService, track_metrics
 from app.repositories.base import UnitOfWork
@@ -21,7 +21,7 @@ from app.repositories.user import UserRepository, RoleRepository
 
 
 class AuthService(BaseService):
-    def __init__(self, uow: UnitOfWork, event_dispatcher: EventDispatcher = None):
+    def __init__(self, uow: UnitOfWork, event_dispatcher: Optional[EventDispatcher] = None):
         super().__init__(uow, event_dispatcher)
 
     @track_metrics("sync_supabase_user")

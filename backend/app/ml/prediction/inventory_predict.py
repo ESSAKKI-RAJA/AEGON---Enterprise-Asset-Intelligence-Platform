@@ -1,7 +1,5 @@
 import os
 import joblib
-import pandas as pd
-from datetime import datetime, timedelta
 from typing import List
 
 from pydantic import BaseModel

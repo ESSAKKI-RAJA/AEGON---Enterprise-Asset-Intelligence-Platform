@@ -2,7 +2,7 @@ import numpy as np
 from sklearn.ensemble import RandomForestClassifier, RandomForestRegressor
 import joblib
 import os
-from typing import Tuple, Dict, Any
+from typing import Dict, Any
 
 from app.ml.registry.mlflow_adapter import mlflow_client
 

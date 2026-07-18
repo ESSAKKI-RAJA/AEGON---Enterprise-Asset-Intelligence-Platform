@@ -1,3 +1,4 @@
+from typing import Optional
 """
 AEGON Vision Intelligence — VisionInspectionService
 Enterprise-grade multi-angle computer vision inspection service.
@@ -23,7 +24,6 @@ from datetime import datetime
 from typing import Any, Dict, List, Optional, Tuple
 
 from app.schemas.vision import (
-    AnalyzeViewRequest,
     BoundingBoxMock,
     CompositeAnalysis,
     DefectFinding,
@@ -502,7 +502,6 @@ class VisionInspectionService:
 
         all_findings = [f for v in view_results for f in v.findings]
         critical_count = sum(1 for f in all_findings if f.severity == DefectSeverity.CRITICAL)
-        high_count = sum(1 for f in all_findings if f.severity == DefectSeverity.HIGH)
 
         priority, priority_desc, cost_est = self.recommend_maintenance(risk, critical_count, health)
 

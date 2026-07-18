@@ -18,7 +18,7 @@ import {
   MonitorPlay,
   Smartphone,
   Layers,
-  ActivitySquare
+  ActivitySquare,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { ViewInspectionResult, ViewPanelState, DefectFinding } from "@/types/vision";
@@ -55,7 +55,13 @@ const SEVERITY_BG = {
   none: "border-slate-700 bg-slate-900/50",
 };
 
-function BoundingBoxOverlay({ findings, showHeatmap }: { findings: DefectFinding[], showHeatmap: boolean }) {
+function BoundingBoxOverlay({
+  findings,
+  showHeatmap,
+}: {
+  findings: DefectFinding[];
+  showHeatmap: boolean;
+}) {
   return (
     <div className="absolute inset-0 pointer-events-none">
       {findings
@@ -69,8 +75,8 @@ function BoundingBoxOverlay({ findings, showHeatmap }: { findings: DefectFinding
                 <div
                   className="absolute rounded-full opacity-60 mix-blend-screen transition-opacity duration-500"
                   style={{
-                    left: `${(bb.x - bb.width/2) * 100}%`,
-                    top: `${(bb.y - bb.height/2) * 100}%`,
+                    left: `${(bb.x - bb.width / 2) * 100}%`,
+                    top: `${(bb.y - bb.height / 2) * 100}%`,
                     width: `${bb.width * 200}%`,
                     height: `${bb.height * 200}%`,
                     background: `radial-gradient(circle, ${sevColor}ff 0%, ${sevColor}00 70%)`,
@@ -90,11 +96,17 @@ function BoundingBoxOverlay({ findings, showHeatmap }: { findings: DefectFinding
                   }}
                 >
                   {finding.mask_points && finding.mask_points.length > 0 && (
-                    <svg className="absolute inset-0 w-full h-full overflow-visible opacity-30" viewBox="0 0 100 100" preserveAspectRatio="none">
-                       <polygon
-                          points={finding.mask_points.map(p => `${p[0]*100},${p[1]*100}`).join(" ")}
-                          fill={sevColor}
-                       />
+                    <svg
+                      className="absolute inset-0 w-full h-full overflow-visible opacity-30"
+                      viewBox="0 0 100 100"
+                      preserveAspectRatio="none"
+                    >
+                      <polygon
+                        points={finding.mask_points
+                          .map((p) => `${p[0] * 100},${p[1] * 100}`)
+                          .join(" ")}
+                        fill={sevColor}
+                      />
                     </svg>
                   )}
                   <div
@@ -120,12 +132,12 @@ function ScanAnimation() {
     "OBJECT DETECTION...",
     "SEGMENTATION...",
     "SEVERITY CLASSIFICATION...",
-    "UPDATING DIGITAL TWIN..."
+    "UPDATING DIGITAL TWIN...",
   ];
 
   useEffect(() => {
     const timer = setInterval(() => {
-      setStage(s => (s + 1) % stages.length);
+      setStage((s) => (s + 1) % stages.length);
     }, 600);
     return () => clearInterval(timer);
   }, [stages.length]);
@@ -137,16 +149,17 @@ function ScanAnimation() {
         animate={{ top: ["0%", "100%", "0%"] }}
         transition={{ duration: 2.0, repeat: Infinity, ease: "linear" }}
       />
-      
+
       <div className="bg-slate-900/80 border border-teal-500/30 px-4 py-2 rounded-lg flex items-center gap-3">
-         <Loader2 className="h-4 w-4 text-teal-400 animate-spin" />
-         <p className="text-[10px] font-mono text-teal-400 font-bold">{stages[stage]}</p>
+        <Loader2 className="h-4 w-4 text-teal-400 animate-spin" />
+        <p className="text-[10px] font-mono text-teal-400 font-bold">{stages[stage]}</p>
       </div>
 
       <div
         className="absolute inset-0 opacity-10 mix-blend-overlay"
         style={{
-          backgroundImage: "linear-gradient(rgba(20,184,166,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.5) 1px, transparent 1px)",
+          backgroundImage:
+            "linear-gradient(rgba(20,184,166,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(20,184,166,0.5) 1px, transparent 1px)",
           backgroundSize: "20px 20px",
         }}
       />
@@ -239,14 +252,22 @@ export function ViewInspector({
             <>
               <button
                 onClick={() => setShowHeatmap((v) => !v)}
-                className={cn("p-1 rounded transition-colors", showHeatmap ? "text-indigo-400 bg-indigo-950/30" : "text-slate-500 hover:text-indigo-400")}
+                className={cn(
+                  "p-1 rounded transition-colors",
+                  showHeatmap
+                    ? "text-indigo-400 bg-indigo-950/30"
+                    : "text-slate-500 hover:text-indigo-400",
+                )}
                 title="Toggle Heatmap"
               >
                 <Layers className="h-3 w-3" />
               </button>
               <button
                 onClick={() => setShowBoxes((v) => !v)}
-                className={cn("p-1 rounded transition-colors", showBoxes ? "text-teal-400 bg-teal-950/30" : "text-slate-500 hover:text-teal-400")}
+                className={cn(
+                  "p-1 rounded transition-colors",
+                  showBoxes ? "text-teal-400 bg-teal-950/30" : "text-slate-500 hover:text-teal-400",
+                )}
                 title="Toggle Bounding Boxes"
               >
                 <Eye className="h-3 w-3" />
@@ -281,7 +302,7 @@ export function ViewInspector({
           <div className="absolute inset-0 flex flex-col">
             {/* Source Selector Header */}
             <div className="flex items-center justify-between px-2 py-1.5 bg-slate-900 border-b border-slate-800">
-              {SOURCES.map(s => {
+              {SOURCES.map((s) => {
                 const Icon = s.icon;
                 return (
                   <button
@@ -289,13 +310,15 @@ export function ViewInspector({
                     onClick={() => setSource(s.id)}
                     className={cn(
                       "flex items-center gap-1 px-1.5 py-1 rounded text-[9px] font-mono transition-colors",
-                      source === s.id ? "bg-indigo-600/20 text-indigo-400" : "text-slate-500 hover:text-slate-300 hover:bg-slate-800"
+                      source === s.id
+                        ? "bg-indigo-600/20 text-indigo-400"
+                        : "text-slate-500 hover:text-slate-300 hover:bg-slate-800",
                     )}
                   >
                     <Icon className="h-2.5 w-2.5" />
                     <span className="hidden sm:inline">{s.label}</span>
                   </button>
-                )
+                );
               })}
             </div>
 
@@ -305,7 +328,10 @@ export function ViewInspector({
                   "flex-1 flex flex-col items-center justify-center gap-2 cursor-pointer transition-all",
                   isDragging && "bg-teal-950/30 border-teal-500/50",
                 )}
-                onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                onDragOver={(e) => {
+                  e.preventDefault();
+                  setIsDragging(true);
+                }}
                 onDragLeave={() => setIsDragging(false)}
                 onDrop={handleDrop}
                 onClick={() => inputRef.current?.click()}
@@ -328,12 +354,14 @@ export function ViewInspector({
               <div className="flex-1 flex flex-col items-center justify-center bg-slate-950">
                 {/* Mock Camera Feed */}
                 <ActivitySquare className="h-6 w-6 text-indigo-500/50 animate-pulse mb-2" />
-                <p className="text-[9px] font-mono text-indigo-400">CONNECTING TO {source.toUpperCase()} STREAM...</p>
+                <p className="text-[9px] font-mono text-indigo-400">
+                  CONNECTING TO {source.toUpperCase()} STREAM...
+                </p>
                 <button
-                   onClick={() => onAnalyze()}
-                   className="mt-4 px-3 py-1 text-[10px] font-mono font-bold border border-indigo-500/30 text-indigo-400 rounded hover:bg-indigo-950/50"
+                  onClick={() => onAnalyze()}
+                  className="mt-4 px-3 py-1 text-[10px] font-mono font-bold border border-indigo-500/30 text-indigo-400 rounded hover:bg-indigo-950/50"
                 >
-                   CAPTURE & ANALYZE
+                  CAPTURE & ANALYZE
                 </button>
               </div>
             )}
@@ -399,11 +427,25 @@ export function ViewInspector({
       {panel.status === "complete" && result && (
         <div className="shrink-0 border-t border-slate-800/60 bg-slate-950/60 px-3 py-1.5 flex items-center justify-between">
           <span className="text-[9px] font-mono text-slate-500">
-            Health: <span className={cn("font-bold", result.view_health_score > 75 ? "text-emerald-400" : result.view_health_score > 50 ? "text-amber-400" : "text-red-400")}>{result.view_health_score.toFixed(0)}%</span>
+            Health:{" "}
+            <span
+              className={cn(
+                "font-bold",
+                result.view_health_score > 75
+                  ? "text-emerald-400"
+                  : result.view_health_score > 50
+                    ? "text-amber-400"
+                    : "text-red-400",
+              )}
+            >
+              {result.view_health_score.toFixed(0)}%
+            </span>
           </span>
           <span className="text-[9px] font-mono text-slate-500">
             {result.defect_count} defects
-            {criticalCount > 0 && <span className="text-red-400 ml-1">({criticalCount} critical)</span>}
+            {criticalCount > 0 && (
+              <span className="text-red-400 ml-1">({criticalCount} critical)</span>
+            )}
           </span>
           <span className="text-[9px] font-mono text-slate-600">
             {result.processing_time_ms.toFixed(0)}ms

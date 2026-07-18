@@ -1,6 +1,5 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import Optional
 import uuid
-import pandas as pd
 from typing import Dict, Any
 
 from app.services.base import BaseService, track_metrics
@@ -10,7 +9,7 @@ from app.repositories.asset import AssetRepository
 from app.ai.budget_intelligence import analyze_cost_trend
 
 class AIService(BaseService):
-    def __init__(self, uow: UnitOfWork, event_dispatcher: EventDispatcher = None):
+    def __init__(self, uow: UnitOfWork, event_dispatcher: Optional[EventDispatcher] = None):
         super().__init__(uow, event_dispatcher)
 
     @track_metrics("evaluate_asset")
@@ -38,7 +37,7 @@ class AIService(BaseService):
                     decision = decisions[0]
                     return {
                         "asset_id": str(asset_id),
-                        "features_snapshot": asset_data[0],
+                        "features_snapshot": df.iloc[0].to_dict(),
                         "health": {"score": asset.health_score},
                         "maintenance_recommendation": {
                             "action": decision.recommended_action,
@@ -47,7 +46,7 @@ class AIService(BaseService):
                         "replacement_plan": {"status": "Review recommended"},
                         "feature_importance": {"impact": decision.financial_impact}
                     }
-            except Exception as e:
+            except Exception:
                 pass
 
             return {

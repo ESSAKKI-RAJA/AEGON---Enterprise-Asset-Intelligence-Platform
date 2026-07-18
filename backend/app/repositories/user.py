@@ -1,4 +1,4 @@
-from typing import Optional, List
+from typing import Optional
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories.base import BaseRepository, translate_db_exception, CacheHook, AuditHook
@@ -30,7 +30,7 @@ class UserRepository(BaseRepository[User]):
                 selectinload(self.model_class.department)
             ).where(
                 self.model_class.email == email,
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             )
             result = await self.session.execute(stmt)
             return result.scalar_one_or_none()
@@ -46,7 +46,7 @@ class UserRepository(BaseRepository[User]):
                 selectinload(self.model_class.department)
             ).where(
                 self.model_class.supabase_user_id == supabase_user_id,
-                self.model_class.is_deleted == False
+                self.model_class.is_deleted .is_(False)
             )
             result = await self.session.execute(stmt)
             return result.scalar_one_or_none()

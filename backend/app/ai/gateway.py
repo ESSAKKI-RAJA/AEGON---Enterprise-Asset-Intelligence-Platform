@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, Any
 from app.services.analytics_service import AnalyticsService
 from app.ml.gateway import ml_gateway
 

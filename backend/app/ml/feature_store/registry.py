@@ -1,4 +1,4 @@
-from typing import Dict, Any, List
+from typing import Dict, List
 from app.ml.dto.feature import FeatureDTO
 
 class FeatureRegistry:

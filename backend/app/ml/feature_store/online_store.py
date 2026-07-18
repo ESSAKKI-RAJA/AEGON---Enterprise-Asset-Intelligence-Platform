@@ -1,5 +1,4 @@
 from typing import Dict, Any
-from app.ml.feature_store.registry import feature_registry
 
 class OnlineFeatureStore:
     """

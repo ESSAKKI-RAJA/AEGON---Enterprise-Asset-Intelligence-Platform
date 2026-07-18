@@ -20,12 +20,7 @@ from fastapi import APIRouter, File, Form, HTTPException, Query, UploadFile, sta
 
 from app.schemas.vision import (
     AnalyzeViewRequest,
-    CompositeAnalysis,
-    DigitalTwinState,
-    ExecutiveSummary,
     Generate360Request,
-    InspectionSession,
-    VisionStatistics,
     VisionViewType,
     ViewInspectionResult,
     CreateMaintenanceTicketRequest,

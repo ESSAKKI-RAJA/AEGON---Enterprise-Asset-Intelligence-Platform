@@ -1,6 +1,6 @@
-import uuid
+from typing import Optional
 import math
-from typing import List, Dict, Any, Tuple
+from typing import List, Dict, Any
 from app.services.base import BaseService, track_metrics
 from app.repositories.base import UnitOfWork
 from app.core.events import EventDispatcher
@@ -16,7 +16,7 @@ def cosine_similarity(v1: List[float], v2: List[float]) -> float:
     return dot / (norm1 * norm2)
 
 class RAGService(BaseService):
-    def __init__(self, uow: UnitOfWork, event_dispatcher: EventDispatcher = None):
+    def __init__(self, uow: UnitOfWork, event_dispatcher: Optional[EventDispatcher] = None):
         super().__init__(uow, event_dispatcher)
 
     def _chunk_text(self, text: str, chunk_size: int = 500, overlap: int = 50) -> List[str]:

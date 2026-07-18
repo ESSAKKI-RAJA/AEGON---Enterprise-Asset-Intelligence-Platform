@@ -1,5 +1,4 @@
-from typing import Dict, Any
-import time
+from typing import Dict
 
 class PerformanceMonitor:
     """Tracks latency, throughput, and memory consumption for ML models."""

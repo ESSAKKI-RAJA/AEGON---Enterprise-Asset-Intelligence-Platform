@@ -112,4 +112,3 @@ def get_supabase(supabase: SupabaseService = Depends(get_supabase_service)) -> S
 # ---------------------------------------------------------------------------
 # Authorization helpers — pass-through in evaluation mode
 # ---------------------------------------------------------------------------
-from app.core.authorization import require_permission, require_role, require_department_access  # noqa: E402

@@ -1,9 +1,9 @@
+from typing import Optional
 from datetime import datetime, timedelta
 import uuid
 from typing import Dict, Any, List
 
-from app.models.maintenance import MaintenanceRecord, WorkOrder, Downtime
-from app.models.asset import Asset
+from app.models.maintenance import MaintenanceRecord
 from app.repositories.maintenance import MaintenanceRepository
 from app.repositories.asset import AssetRepository
 from app.repositories.base import UnitOfWork
@@ -17,7 +17,7 @@ class MaintenanceRecordedEvent(DomainEvent):
         self.cost = cost
 
 class MaintenanceService(BaseService):
-    def __init__(self, uow: UnitOfWork, event_dispatcher: EventDispatcher = None):
+    def __init__(self, uow: UnitOfWork, event_dispatcher: Optional[EventDispatcher] = None):
         super().__init__(uow, event_dispatcher)
 
     @track_metrics("record_maintenance")

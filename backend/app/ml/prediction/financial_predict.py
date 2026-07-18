@@ -1,8 +1,5 @@
 import os
 import joblib
-import pandas as pd
-from datetime import datetime, timedelta
-from typing import Dict
 from pydantic import BaseModel
 
 class FinancialForecastDTO(BaseModel):
