@@ -58,6 +58,7 @@ app.include_router(realtime.router, prefix=f"{settings.API_V1_STR}/realtime", ta
 app.include_router(settings_api.router, prefix=f"{settings.API_V1_STR}/settings", tags=["settings"])
 app.include_router(search.router, prefix=f"{settings.API_V1_STR}/search", tags=["search"])
 app.include_router(vision.router, prefix=f"{settings.API_V1_STR}/vision", tags=["vision-intelligence"])
+app.include_router(health.router, tags=["health"])
 
 from app.core.database import AsyncSessionLocal
 from app.core.cache import get_cache

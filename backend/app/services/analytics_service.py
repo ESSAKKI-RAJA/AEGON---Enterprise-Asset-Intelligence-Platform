@@ -10,6 +10,11 @@ from app.models.maintenance import MaintenanceCost, WorkOrder
 from app.models.organization import Department
 from app.ai.llm_gateway import llm_gateway
 
+import logging
+from time import perf_counter
+
+logger = logging.getLogger(__name__)
+
 class AnalyticsService:
     def __init__(self, asset_service, maintenance_service, uow: UnitOfWork):
         self.asset_service = asset_service
@@ -17,28 +22,39 @@ class AnalyticsService:
         self.uow = uow
 
     async def full_dashboard_payload(self) -> Dict[str, Any]:
+        start_time = perf_counter()
+        logger.info({"operation": "full_dashboard_payload", "status": "started", "message": "Fetching executive dashboard intelligence"})
+        
         cache_key = "analytics:full_dashboard_v2"
         cached_data = await CacheService.get(cache_key)
         if cached_data:
+            logger.info({"operation": "full_dashboard_payload", "status": "cache_hit", "duration_ms": (perf_counter() - start_time) * 1000})
             return cached_data
+            
+        logger.info({"operation": "full_dashboard_payload", "status": "cache_miss", "message": "Executing full DB and ML pipelines"})
             
         async def _fetch_data():
             session = self.uow.session
             
             # Use KPI Engine
             from app.analytics.enterprise_kpi import EnterpriseKPIEngine
+            logger.info({"operation": "compute_kpis", "status": "started"})
             kpis_data = await EnterpriseKPIEngine.compute_kpis(session)
+            logger.info({"operation": "compute_kpis", "status": "completed"})
             
             # Fetch features dynamically via Feature Engineering pipeline
             from app.ml.feature_engineering.asset_failure import build_asset_failure_features
             try:
+                logger.info({"operation": "build_asset_failure_features", "status": "started"})
+                t0 = perf_counter()
                 asset_df = await build_asset_failure_features(session)
+                logger.info({"operation": "build_asset_failure_features", "status": "completed", "duration_ms": (perf_counter() - t0) * 1000, "rows": len(asset_df)})
                 
                 # Fetch a small sample to keep dashboard fast
                 if not asset_df.empty:
                     asset_df = asset_df.head(20)
             except Exception as e:
-                print(f"Feature Engineering Error: {e}")
+                logger.error({"operation": "build_asset_failure_features", "status": "error", "error": str(e)}, exc_info=True)
                 # Fallback to empty
                 import pandas as pd
                 asset_df = pd.DataFrame()
@@ -47,23 +63,32 @@ class AnalyticsService:
             if not asset_df.empty:
                 try:
                     from app.ml.inference.decision_engine import DecisionEngine
+                    logger.info({"operation": "decision_engine", "status": "started"})
                     engine = DecisionEngine()
                     # We pass empty inventory_data for simplicity
                     decisions = engine.generate_asset_decisions(asset_df, [])
+                    logger.info({"operation": "decision_engine", "status": "completed", "decisions_count": len(decisions)})
                 except Exception as e:
-                    print(f"ML Engine Error: {e}")
+                    logger.error({"operation": "decision_engine", "status": "error", "error": str(e)}, exc_info=True)
             
             # Financial Forecast for charts
             try:
+                logger.info({"operation": "predict_financials", "status": "started"})
                 from app.ml.prediction.financial_predict import predict_financials
                 fin_forecast = predict_financials()
                 capex_forecast = fin_forecast.capex_90_days
-            except:
+                logger.info({"operation": "predict_financials", "status": "completed", "capex_90_days": capex_forecast})
+            except Exception as e:
+                logger.error({"operation": "predict_financials", "status": "error", "error": str(e)})
                 capex_forecast = 0.0
             
             return kpis_data, decisions[:4], capex_forecast
             
-        kpis_data, top_decisions, capex_forecast = await self.execute_in_transaction(_fetch_data)
+        try:
+            kpis_data, top_decisions, capex_forecast = await self.execute_in_transaction(_fetch_data)
+        except Exception as e:
+            logger.error({"operation": "full_dashboard_payload_transaction", "status": "error", "error": str(e)}, exc_info=True)
+            raise
 
         # Build executive KPIs
         kpis = [

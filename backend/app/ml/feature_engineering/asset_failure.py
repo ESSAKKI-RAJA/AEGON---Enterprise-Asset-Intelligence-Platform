@@ -30,6 +30,17 @@ async def build_asset_failure_features(session: AsyncSession, asset_id: Optional
     data = []
     now = datetime.now(timezone.utc)
     
+    asset_ids = [asset.id for asset in assets]
+    
+    # Bulk fetch maintenance records
+    records_by_asset = {}
+    if asset_ids:
+        records_stmt = select(MaintenanceRecord).where(MaintenanceRecord.asset_id.in_(asset_ids))
+        records_res = await session.execute(records_stmt)
+        all_records = records_res.scalars().all()
+        for r in all_records:
+            records_by_asset.setdefault(r.asset_id, []).append(r)
+    
     for asset in assets:
         # Age in days
         if asset.purchase_date:
@@ -41,9 +52,7 @@ async def build_asset_failure_features(session: AsyncSession, asset_id: Optional
             age_days = 0
         
         # Maintenance Frequency & Repair Cost & Downtime (simulated from records)
-        records_stmt = select(MaintenanceRecord).where(MaintenanceRecord.asset_id == asset.id)
-        records_res = await session.execute(records_stmt)
-        records = records_res.scalars().all()
+        records = records_by_asset.get(asset.id, [])
         
         maintenance_freq = len(records)
         total_repair_cost = sum(r.cost for r in records if r.cost)
