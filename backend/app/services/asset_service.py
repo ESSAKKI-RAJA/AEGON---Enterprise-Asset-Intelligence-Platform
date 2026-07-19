@@ -10,8 +10,14 @@ from app.services.base import BaseService, track_metrics
 from app.core.events import EventDispatcher, DomainEvent
 from app.core.rules import BusinessRule, RuleContext, BusinessRuleEngine
 from app.core.workflow import WorkflowOrchestrator, WorkflowStep, WorkflowContext
-from app.services.notification_service import AssetCriticalEvent
 from fastapi import HTTPException
+
+# --- Domain Events ---
+class AssetCriticalEvent(DomainEvent):
+    def __init__(self, asset_name: str, department: str, **kwargs):
+        super().__init__(**kwargs)
+        self.asset_name = asset_name
+        self.department = department
 
 # --- Business Rules ---
 class EvaluateWarrantyRule(BusinessRule):

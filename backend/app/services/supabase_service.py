@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 """
 AEGON Supabase Service
 ========================
@@ -16,14 +16,12 @@ Architecture:
   - Secrets never leave the backend (SECRET_KEY only used server-side).
 """
 
-from __future__ import annotations
+import logging
 from functools import lru_cache
 from typing import Optional
 
 from supabase import create_client, Client
 from app.core.config import settings
-
-import logging
 
 logger = logging.getLogger(__name__)
 

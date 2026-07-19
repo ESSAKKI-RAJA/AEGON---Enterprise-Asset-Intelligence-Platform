@@ -1,4 +1,4 @@
-from typing import Optional
+from __future__ import annotations
 """
 AEGON Vision Intelligence — VisionInspectionService
 Enterprise-grade multi-angle computer vision inspection service.
@@ -13,7 +13,6 @@ Inspection Pipeline:
     Surface Inspection → Damage Detection → Severity Classification →
     Confidence Scoring → Risk Assessment → Health Score → Summary → Report
 """
-from __future__ import annotations
 
 import logging
 import random

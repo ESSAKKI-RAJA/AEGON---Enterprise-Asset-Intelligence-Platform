@@ -16,4 +16,4 @@ async def client():
 async def test_health_check(client: AsyncClient):
     response = await client.get("/health")
     assert response.status_code == 200
-    assert response.json() == {"status": "ok", "service": "AEGON Enterprise API"}
+    assert response.json() == {"status": "OK", "service": "AEGON Backend V5.3"}
