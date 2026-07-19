@@ -57,7 +57,10 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["X-Frame-Options"] = "DENY"
         response.headers["X-XSS-Protection"] = "1; mode=block"
         response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
-        response.headers["Content-Security-Policy"] = "default-src 'self'; script-src 'self'; object-src 'none';"
+        # NOTE: Content-Security-Policy is intentionally NOT set on the API server.
+        # CSP must be set by the frontend HTML host (Vercel), not the JSON API server.
+        # Setting 'default-src: self' on the API causes browsers to block cross-origin
+        # fetch responses from the Vercel frontend to the Render backend.
         response.headers["Permissions-Policy"] = "geolocation=(), microphone=(), camera=()"
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         return response

@@ -54,9 +54,36 @@ function DashboardPage() {
   }
 
   if (error) {
+    const axiosErr = error as any;
+    const status = axiosErr?.response?.status ?? "Network Error";
+    const endpoint = "/api/v1/analytics/dashboards/executive";
+    const detail =
+      axiosErr?.response?.data?.detail ??
+      axiosErr?.response?.data?.message ??
+      axiosErr?.message ??
+      "Unknown error";
     return (
-      <div className="flex h-[50vh] items-center justify-center text-red-500 font-mono bg-red-50 dark:bg-red-950/20 p-6 rounded-xl border border-red-200 dark:border-red-900/50">
-        Error loading intelligence feed. Check ML pipelines.
+      <div className="flex h-[50vh] items-center justify-center p-6">
+        <div className="max-w-xl w-full bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-900/50 rounded-xl p-6 space-y-3 font-mono text-sm">
+          <div className="flex items-center gap-2 text-red-600 dark:text-red-400 font-bold text-base">
+            <AlertTriangle className="h-5 w-5" />
+            Dashboard Load Failed
+          </div>
+          <div className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-1 text-xs text-slate-600 dark:text-slate-400">
+            <span className="font-semibold text-slate-500">Status</span>
+            <span className="text-red-500 font-bold">{String(status)}</span>
+            <span className="font-semibold text-slate-500">Endpoint</span>
+            <span className="break-all">{endpoint}</span>
+            <span className="font-semibold text-slate-500">Message</span>
+            <span className="text-red-400">{String(detail)}</span>
+          </div>
+          <button
+            onClick={() => window.location.reload()}
+            className="mt-2 text-xs bg-red-600 hover:bg-red-700 text-white px-4 py-1.5 rounded-lg transition-colors"
+          >
+            Retry
+          </button>
+        </div>
       </div>
     );
   }

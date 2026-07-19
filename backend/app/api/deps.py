@@ -95,8 +95,10 @@ def get_finance_service(uow: UnitOfWork = Depends(get_uow)) -> FinanceService:
     return FinanceService(uow=uow, event_dispatcher=dispatcher)
 
 
-def get_analytics_service(db: AsyncSession = Depends(get_db)) -> AnalyticsService:
-    return AnalyticsService(db=db)
+def get_analytics_service(uow: UnitOfWork = Depends(get_uow)) -> AnalyticsService:
+    asset_svc = AssetService(uow=uow, event_dispatcher=dispatcher)
+    maint_svc = MaintenanceService(uow=uow, event_dispatcher=dispatcher)
+    return AnalyticsService(asset_service=asset_svc, maintenance_service=maint_svc, uow=uow)
 
 
 # ---------------------------------------------------------------------------

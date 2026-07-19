@@ -21,8 +21,9 @@ from app.core.audit import DatabaseAuditHook
 class Container(containers.DeclarativeContainer):
     wiring_config = containers.WiringConfiguration(packages=["app.api.v1"])
 
-    # Database
-    db_session = providers.Resource(AsyncSessionLocal)
+    # Database — lazy resolution: AsyncSessionLocal is None until init_db() runs in lifespan.
+    # Using a lambda factory ensures we never freeze a None reference at import time.
+    db_session = providers.Factory(lambda: __import__('app.core.database', fromlist=['AsyncSessionLocal']).AsyncSessionLocal())
 
     # Repositories (provided as classes/factories to be bound to request sessions)
     user_repository = providers.Object(UserRepository)
